@@ -71,7 +71,7 @@ class ChooseModePage extends StatelessWidget {
                 const SizedBox(height: 50),
                 BasicAppButton(
                     onPressed: () =>
-                        Navigator.of(context).pushNamed('/choose-mode'),
+                        Navigator.of(context).pushNamed('/authentication'),
                     title: 'Continue ')
               ],
             ),
