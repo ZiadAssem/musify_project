@@ -9,11 +9,33 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_bloc: ^8.1.6
+  flutter_svg: ^2.0.10+1
+  hydrated_bloc: ^9.1.5
+  path_provider: ^2.1.3
 
 dev_dependencies:
+  flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/fonts/
+    - assets/images/
+    - assets/vectors/
+
+  fonts:
+    - family: Satoshi
+      fonts:
+        - asset: assets/fonts/Satoshi-Black.ttf
+          weight: 900
+        - asset: assets/fonts/Satoshi-Bold.ttf
+          weight: 600
+        - asset: assets/fonts/Satoshi-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Satoshi-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Satoshi-Light.ttf
+          weight: 300
