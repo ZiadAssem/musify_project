@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotify_project/presentation/auth/pages/signin_page.dart';
 import 'package:spotify_project/presentation/auth/pages/signup.dart';
 import 'package:spotify_project/presentation/auth/pages/signup_or_sigin.dart';
 import 'package:spotify_project/presentation/choose_mode/pages/choose_mode.dart';
@@ -15,6 +16,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const SignupOrSigninPage());
       case '/signup':
         return MaterialPageRoute(builder: (_) => const SignupPage());
+      case '/signin':
+        return MaterialPageRoute(builder: (_) => const SigninPage());
       default:
         return null;
     }

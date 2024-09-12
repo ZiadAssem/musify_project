@@ -49,7 +49,9 @@ class SignupOrSigninPage extends StatelessWidget {
                         Expanded(
                             flex: 1,
                             child: BasicAppButton(
-                                onPressed: () {}, title: 'Register')),
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/signup');
+                                }, title: 'Register')),
                         Expanded(
                           flex: 1,
                           child: TextButton(
@@ -58,7 +60,7 @@ class SignupOrSigninPage extends StatelessWidget {
                             },
                             child: TextButton(
                               onPressed: () {
-                                Navigator.pushNamed(context, '/login');
+                                Navigator.pushNamed(context, '/signin');
                               },
                               child: Text(
                                 'Sign in',

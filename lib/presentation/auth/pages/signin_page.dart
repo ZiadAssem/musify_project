@@ -6,8 +6,8 @@ import 'package:spotify_project/core/configs/assets/app_vectors.dart';
 import 'package:spotify_project/core/configs/theme/app_colors.dart';
 import 'package:spotify_project/core/configs/theme/app_theme.dart';
 
-class SignupPage extends StatelessWidget {
-  const SignupPage({super.key});
+class SigninPage extends StatelessWidget {
+  const SigninPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class SignupPage extends StatelessWidget {
           width: 40,
         ),
       ),
-      bottomNavigationBar: _signinText(context),
+      bottomNavigationBar: _signupText(context),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 50.0,
@@ -30,12 +30,11 @@ class SignupPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _registerText(),
-              _fullNameField(context),
               _emailField(context),
               _passwordField(context),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-                child: BasicAppButton(onPressed: () {}, title: 'Create Account'),
+                child: BasicAppButton(onPressed: () {}, title: 'Sign In'),
               )
             ],
           ),
@@ -46,7 +45,7 @@ class SignupPage extends StatelessWidget {
 
   Widget _registerText() {
     return const Text(
-      'Register',
+      'Sign In',
       style: TextStyle(
         fontSize: 26,
         fontWeight: FontWeight.bold,
@@ -55,20 +54,9 @@ class SignupPage extends StatelessWidget {
     );
   }
 
-  Widget _fullNameField(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-      child: TextField(
-        decoration: const InputDecoration(
-          hintText: 'Full Name',
-        ).applyDefaults(Theme.of(context).inputDecorationTheme),
-      ),
-    );
-  }
-
   Widget _emailField(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+      padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
       child: TextField(
         decoration: const InputDecoration(
           hintText: 'Email',
@@ -88,23 +76,23 @@ class SignupPage extends StatelessWidget {
     );
   }
 
-  Widget _signinText(BuildContext context) {
+  Widget _signupText(BuildContext context) {
     return  Padding(
       padding: EdgeInsets.symmetric(vertical: 30.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text(
-            'Already have an account?',
+            'Not a member?',
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
           ),
           TextButton(onPressed: (){
-            Navigator.pushReplacementNamed(context, '/signin');
+            Navigator.pushReplacementNamed(context, '/signup');
           }, child: 
-          const Text('Sign In'))
+          const Text('Sign Up'))
         ],
       ),
     );
