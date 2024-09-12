@@ -10,9 +10,10 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(AppColors.primary),
+        elevation: MaterialStateProperty.all(0.0),
         textStyle: MaterialStateProperty.all(
           const TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -33,9 +34,10 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(AppColors.primary),
+        elevation: MaterialStateProperty.all(0.0),
         textStyle: MaterialStateProperty.all(
           const TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),

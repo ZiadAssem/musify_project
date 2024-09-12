@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:spotify_project/common/helpers/is_dark_mode.dart';
+import 'package:spotify_project/common/widgets/appbar/app_bar.dart';
 import 'package:spotify_project/common/widgets/button/basic_app_button.dart';
 import 'package:spotify_project/core/configs/assets/app_images.dart';
 import 'package:spotify_project/core/configs/assets/app_vectors.dart';
-import 'package:spotify_project/core/configs/theme/app_colors.dart';
 
 class SignupOrSigninPage extends StatelessWidget {
   const SignupOrSigninPage({super.key});
@@ -13,6 +14,7 @@ class SignupOrSigninPage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
+          const BasicAppBar(),
           Align(
             alignment: Alignment.topRight,
             child: SvgPicture.asset(AppVectors.topPattern),
@@ -32,24 +34,15 @@ class SignupOrSigninPage extends StatelessWidget {
                 children: [
                   SvgPicture.asset(AppVectors.logo),
                   const SizedBox(height: 40),
-                  const Text(
-                    'Welcome to Spotify',
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  const Text('Welcome to Spotify',
+                      style:
+                          TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Millions of songs. Free on Spotify.',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
-                    ),
-                  ),
+                  const Text('Millions of songs. Free on Spotify.',
+                      style: TextStyle(fontSize: 18, color: Colors.grey)),
                   const SizedBox(height: 40),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -63,12 +56,21 @@ class SignupOrSigninPage extends StatelessWidget {
                             onPressed: () {
                               Navigator.pushNamed(context, '/choose-mode');
                             },
-                            child: const Text(
-                              'Log in',
-                              style: TextStyle(
-                                color: AppColors.grey,
-                                fontSize: 18, ),
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/login');
+                              },
+                              child: Text(
+                                'Sign in',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: context.isDarkMode
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontSize: 18,
+                                ),
                               ),
+                            ),
                           ),
                         ),
                       ],
