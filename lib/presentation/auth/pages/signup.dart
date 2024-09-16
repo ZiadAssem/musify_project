@@ -3,8 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:spotify_project/common/widgets/appbar/app_bar.dart';
 import 'package:spotify_project/common/widgets/button/basic_app_button.dart';
 import 'package:spotify_project/core/configs/assets/app_vectors.dart';
-import 'package:spotify_project/core/configs/theme/app_colors.dart';
-import 'package:spotify_project/core/configs/theme/app_theme.dart';
 import 'package:spotify_project/data/models/auth/create_user_request.dart';
 import 'package:spotify_project/domain/usecases/auth/signup.dart';
 
@@ -12,9 +10,9 @@ import '../../../service_locater.dart';
 
 class SignupPage extends StatelessWidget {
   SignupPage({super.key});
-  TextEditingController _fullNameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +52,12 @@ class SignupPage extends StatelessWidget {
                       );
                       result.fold((l) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(l.toString()))
-                  );
+                            SnackBar(content: Text(l.toString())));
                       }, (r) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                             SnackBar(content: Text(r.toString())));
-                        Navigator.pushNamedAndRemoveUntil(context, '/root', (route) => false);
-                        
+                            SnackBar(content: Text(r.toString())));
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/root', (route) => false);
                       });
                     },
                     title: 'Create Account'),
