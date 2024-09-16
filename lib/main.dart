@@ -1,11 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:spotify_project/core/configs/theme/app_theme.dart';
+import 'package:spotify_project/firebase_options.dart';
 import 'package:spotify_project/presentation/router/app_router.dart';
 import 'package:spotify_project/presentation/splash/pages/splash.dart';
+import 'package:spotify_project/service_locater.dart';
 
 import 'presentation/choose_mode/bloc/theme_cubit.dart';
 
@@ -19,10 +22,10 @@ Future<void> main() async {
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: storageDirectory,
   );
-
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await initializeDependencies();
   runApp(MainApp());
-}
-
+} 
 
 class MainApp extends StatelessWidget {
   final AppRouter _appRouter = AppRouter();

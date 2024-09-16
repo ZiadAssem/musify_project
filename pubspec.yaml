@@ -7,11 +7,14 @@ environment:
   sdk: '>=3.1.0 <4.0.0'
 
 dependencies:
+  dartz: ^0.10.1
+  firebase_auth: 4.16.0
   firebase_core: 2.24.2
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.6
   flutter_svg: ^2.0.10+1
+  get_it: 7.6.7
   hydrated_bloc: ^9.1.5
   path_provider: ^2.1.3
 

@@ -106,7 +106,7 @@ class ModeButton extends StatelessWidget {
                 width: 80,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Color(0xFF30393C).withOpacity(0.5),
+                  color: const Color(0xFF30393C).withOpacity(0.5),
                 ),
                 child: SvgPicture.asset(
                   vector,

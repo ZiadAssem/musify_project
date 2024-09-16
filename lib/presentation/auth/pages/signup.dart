@@ -5,9 +5,16 @@ import 'package:spotify_project/common/widgets/button/basic_app_button.dart';
 import 'package:spotify_project/core/configs/assets/app_vectors.dart';
 import 'package:spotify_project/core/configs/theme/app_colors.dart';
 import 'package:spotify_project/core/configs/theme/app_theme.dart';
+import 'package:spotify_project/data/models/auth/create_user_request.dart';
+import 'package:spotify_project/domain/usecases/auth/signup.dart';
+
+import '../../../service_locater.dart';
 
 class SignupPage extends StatelessWidget {
-  const SignupPage({super.key});
+  SignupPage({super.key});
+  TextEditingController _fullNameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +42,28 @@ class SignupPage extends StatelessWidget {
               _passwordField(context),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-                child: BasicAppButton(onPressed: () {}, title: 'Create Account'),
+                child: BasicAppButton(
+                    onPressed: () async {
+                      var result = await sl<SignupUseCase>().call(
+                        params: CreateUserRequest(
+                            email: _emailController.text.trim().toString(),
+                            password:
+                                _passwordController.text.trim().toString(),
+                            fullName:
+                                _fullNameController.text.trim().toString()),
+                      );
+                      result.fold((l) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(l.toString()))
+                  );
+                      }, (r) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                             SnackBar(content: Text(r.toString())));
+                        Navigator.pushNamedAndRemoveUntil(context, '/root', (route) => false);
+                        
+                      });
+                    },
+                    title: 'Create Account'),
               )
             ],
           ),
@@ -59,6 +87,7 @@ class SignupPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
       child: TextField(
+        controller: _fullNameController,
         decoration: const InputDecoration(
           hintText: 'Full Name',
         ).applyDefaults(Theme.of(context).inputDecorationTheme),
@@ -70,6 +99,7 @@ class SignupPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
       child: TextField(
+        controller: _emailController,
         decoration: const InputDecoration(
           hintText: 'Email',
         ).applyDefaults(Theme.of(context).inputDecorationTheme),
@@ -81,6 +111,7 @@ class SignupPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
       child: TextField(
+        controller: _passwordController,
         decoration: const InputDecoration(
           hintText: 'Password',
         ).applyDefaults(Theme.of(context).inputDecorationTheme),
@@ -89,8 +120,8 @@ class SignupPage extends StatelessWidget {
   }
 
   Widget _signinText(BuildContext context) {
-    return  Padding(
-      padding: EdgeInsets.symmetric(vertical: 30.0),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 30.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -101,10 +132,11 @@ class SignupPage extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          TextButton(onPressed: (){
-            Navigator.pushReplacementNamed(context, '/signin');
-          }, child: 
-          const Text('Sign In'))
+          TextButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/signin');
+              },
+              child: const Text('Sign In'))
         ],
       ),
     );

@@ -78,7 +78,7 @@ class SigninPage extends StatelessWidget {
 
   Widget _signupText(BuildContext context) {
     return  Padding(
-      padding: EdgeInsets.symmetric(vertical: 30.0),
+      padding: const EdgeInsets.symmetric(vertical: 30.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
