@@ -1,1 +1,25 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"spotify-clone-12-9","appId":"1:449533089869:android:3da26631e6f7d3fcafa404","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"spotify-clone-12-9","configurations":{"android":"1:449533089869:android:3da26631e6f7d3fcafa404","ios":"1:449533089869:ios:5ea835fe3c59375bafa404","macos":"1:449533089869:ios:5ea835fe3c59375bafa404","web":"1:449533089869:web:d11e63facc593201afa404","windows":"1:449533089869:web:529be91b55426e0dafa404"}}}}}}
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "spotify-clone-flutter17924",
+                    "appId": "1:657220813318:android:dca1cea5d7d1637a84b987",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "spotify-clone-flutter17924",
+                    "configurations": {
+                        "android": "1:657220813318:android:dca1cea5d7d1637a84b987",
+                        "ios": "1:657220813318:ios:eed2ebd3f80a4b0784b987",
+                        "macos": "1:657220813318:ios:eed2ebd3f80a4b0784b987",
+                        "web": "1:657220813318:web:dfe079eaf2d80d5484b987",
+                        "windows": "1:657220813318:web:e2527f8a52a1840d84b987"
+                    }
+                }
+            }
+        }
+    }
+}
