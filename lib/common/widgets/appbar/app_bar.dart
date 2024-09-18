@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:spotify_project/common/helpers/is_dark_mode.dart';
 
-class BasicAppBar extends StatelessWidget implements PreferredSizeWidget
- {
+class BasicAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? title;
-  const BasicAppBar({super.key, this.title});
+  final bool hideBackButton;
+  const BasicAppBar({super.key, this.title, this.hideBackButton = false});
 
   @override
   Widget build(BuildContext context) {
@@ -13,24 +13,26 @@ class BasicAppBar extends StatelessWidget implements PreferredSizeWidget
       elevation: 0,
       centerTitle: true,
       title: title ?? Container(),
-      leading: IconButton(
-        icon: Container(
-            alignment: Alignment.center,
-            height: 50,
-            width: 50,
-            decoration: const BoxDecoration(
-              color: Colors.transparent,
-              shape: BoxShape.circle,
+      leading: hideBackButton
+          ? null
+          : IconButton(
+              icon: Container(
+                  alignment: Alignment.center,
+                  height: 50,
+                  width: 50,
+                  decoration: const BoxDecoration(
+                    color: Colors.transparent,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    size: 15,
+                    color: context.isDarkMode ? Colors.white : Colors.black,
+                  )),
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
-            child: Icon(
-              Icons.arrow_back_ios,
-              size: 15,
-              color: context.isDarkMode ? Colors.white : Colors.black,
-            )),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
     );
   }
 

@@ -5,7 +5,7 @@ import 'package:spotify_project/presentation/auth/pages/signup_or_sigin.dart';
 import 'package:spotify_project/presentation/choose_mode/pages/choose_mode.dart';
 import 'package:spotify_project/presentation/intro/pages/get_started.dart';
 
-import '../root/pages/root.dart';
+import '../home/pages/home.dart';
 
 class AppRouter {
   Route? onGenerateRoute(RouteSettings routeSettings) {
@@ -21,7 +21,7 @@ class AppRouter {
       case '/signin':
         return MaterialPageRoute(builder: (_) =>  SigninPage());
       case '/root':
-        return MaterialPageRoute(builder: (_) => const RootPage());
+        return MaterialPageRoute(builder: (_) =>  HomePage());
       default:
         return null;
     }

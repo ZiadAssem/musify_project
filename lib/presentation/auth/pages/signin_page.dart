@@ -3,8 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:spotify_project/common/widgets/appbar/app_bar.dart';
 import 'package:spotify_project/common/widgets/button/basic_app_button.dart';
 import 'package:spotify_project/core/configs/assets/app_vectors.dart';
-import 'package:spotify_project/core/configs/theme/app_colors.dart';
-import 'package:spotify_project/core/configs/theme/app_theme.dart';
 import 'package:spotify_project/data/models/auth/signin_user_request.dart';
 import 'package:spotify_project/domain/usecases/auth/signin.dart';
 
