@@ -5,6 +5,7 @@ import 'package:spotify_project/common/widgets/appbar/app_bar.dart';
 import 'package:spotify_project/core/configs/assets/app_images.dart';
 import 'package:spotify_project/core/configs/assets/app_vectors.dart';
 import 'package:spotify_project/presentation/home/widgets/new_songs.dart';
+import 'package:spotify_project/presentation/home/widgets/playlist.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -42,6 +43,8 @@ class _HomePageState extends State<HomePage>
             _homeTopCard(),
             _tabs(),
             const NewSongs(),
+            const SizedBox(height: 8),
+            const Playlist(),
           ],
         ),
       ),
@@ -79,9 +82,7 @@ class _HomePageState extends State<HomePage>
           isScrollable: true,
           labelColor: context.isDarkMode ? Colors.white : Colors.black,
           tabs: const [
-            Tab(text: 'News',
-            
-            ),
+            Tab(text: 'News'),
             Tab(text: 'Videos'),
             Tab(text: 'Artists'),
             Tab(text: 'Podcasts'),

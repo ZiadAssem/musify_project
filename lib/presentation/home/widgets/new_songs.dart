@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spotify_project/common/helpers/is_dark_mode.dart';
-import 'package:spotify_project/core/configs/theme/app_colors.dart';
+import 'package:spotify_project/presentation/home/widgets/play_button.dart';
 
 import '../../../domain/entities/song/song.dart';
 import '../bloc/new_songs_cubit.dart';
@@ -40,10 +39,9 @@ class NewSongs extends StatelessWidget {
 
 Widget _songs(List<SongEntity> songs) {
   return Padding(
-    padding: const EdgeInsets.only(top: 16.0,left: 16.0),
+    padding: const EdgeInsets.only(top: 16.0, left: 16.0,),
     child: SizedBox(
-      
-      height: 260,
+      height: 240,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         separatorBuilder: (context, index) => const Divider(),
@@ -57,7 +55,7 @@ Widget _songs(List<SongEntity> songs) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: 180,
+                    height: 160,
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
@@ -68,22 +66,12 @@ Widget _songs(List<SongEntity> songs) {
                       ),
                       child: Align(
                         alignment: Alignment.bottomRight,
-                        child: Container(
-                          height:40 ,
-                          width: 40,
-                          transform: Matrix4.translationValues(10, 10, 0),
-                          decoration:  BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: context.isDarkMode? AppColors.darkGrey: const Color(0xffE6E6E6)
-                          ),
-                          child: IconButton(
-                            alignment: Alignment.topLeft,
-                            
-                            icon: const Icon(Icons.play_arrow_rounded,),
-                            onPressed: () {},
-                            color: context.isDarkMode?   const Color(0xff959595):const Color(0xff555555),
-                            iconSize: 25,
-                          ),
+                        child: PlayButtonIcon(
+                          dimensions: 40.0,
+                          iconSize: 25.0,
+                          onPressed: () {},
+                          translationValues:
+                              Matrix4.translationValues(10, 10, 0),
                         ),
                       ),
                     ),
