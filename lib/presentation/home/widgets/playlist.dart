@@ -62,10 +62,12 @@ class Playlist extends StatelessWidget {
 
 Widget _songs(List<SongEntity> songs) {
   return SizedBox(
-    height: 200,
     child: ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
         itemBuilder: ((context, index) {
           return ListTile(
+            
             tileColor: Colors.transparent,
             selected: false,
             leading: PlayButtonIcon(

@@ -76,13 +76,13 @@ class _HomePageState extends State<HomePage>
 
   Widget _tabs() {
     return Padding(
-      padding: const EdgeInsets.only(top: 16.0, right: 16, left: 16),
+      padding: const EdgeInsets.only(top: 16.0,),
       child: TabBar(
           controller: _tabController,
           isScrollable: true,
           labelColor: context.isDarkMode ? Colors.white : Colors.black,
           tabs: const [
-            Tab(text: 'News'),
+            Tab(text: 'New',),
             Tab(text: 'Videos'),
             Tab(text: 'Artists'),
             Tab(text: 'Podcasts'),
