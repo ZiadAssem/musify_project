@@ -18,6 +18,8 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
+      print('SplashPage');
+
     return Scaffold(
       body: Center(
         child: SvgPicture.asset(
