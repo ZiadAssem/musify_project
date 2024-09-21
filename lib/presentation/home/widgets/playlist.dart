@@ -63,33 +63,36 @@ class Playlist extends StatelessWidget {
 Widget _songs(List<SongEntity> songs) {
   return SizedBox(
     child: ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: ((context, index) {
-          return ListTile(
-            
-            tileColor: Colors.transparent,
-            selected: false,
-            leading: PlayButtonIcon(
-              dimensions: 50,
-              iconSize: 35,
-              onPressed: () {},
-            ),
-            title: Text(songs[index].title),
-            subtitle: Text(songs[index].artist),
-            trailing: SizedBox(
-              width: 100,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(songs[index].duration.toString().replaceAll('.', ':')),
-                  IconButton.filled(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.favorite_rounded,
-                        color: AppColors.grey,
-                      ))
-                ],
+          return GestureDetector(
+            onTap: () => Navigator.pushNamed(context, '/song-player',
+                arguments: songs[index]),
+            child: ListTile(
+              tileColor: Colors.transparent,
+              selected: false,
+              leading: PlayButtonIcon(
+                dimensions: 50,
+                iconSize: 35,
+                onPressed: () {},
+              ),
+              title: Text(songs[index].title),
+              subtitle: Text(songs[index].artist),
+              trailing: SizedBox(
+                width: 100,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(songs[index].duration.toString().replaceAll('.', ':')),
+                    IconButton.filled(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.favorite_rounded,
+                          color: AppColors.grey,
+                        ))
+                  ],
+                ),
               ),
             ),
           );

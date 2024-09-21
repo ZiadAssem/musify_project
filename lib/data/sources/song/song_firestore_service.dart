@@ -6,10 +6,9 @@ import 'package:spotify_project/domain/entities/song/song.dart';
 
 abstract class SongFirebaseService {
   Future<Either> getNewSongs();
-  
+
   Future<Either>
       getPlaylist(); //Hypothetical method, there are no actual playlists
-  
 }
 
 class SongFirebaseServiceImpl implements SongFirebaseService {
@@ -23,7 +22,7 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
       var data = await firestore
           .collection('Songs')
           .orderBy('releaseDate', descending: true)
-          .limit(3)
+          .limit(10)
           .get();
 
       for (var element in data.docs) {
@@ -31,31 +30,35 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
         var artist = songData['artist'];
         var title = songData['title'];
         var coverURL = '';
+        var songURL = '';
 
-        Reference fileRef =
+        Reference imageRef =
             storage.ref().child('covers/${artist.trim()} - $title.jpeg');
+        Reference songRef =
+            storage.ref().child('songs/${artist.trim()} - $title.mp3');
 
         // Get the download URL for cover images
         try {
-          coverURL = await fileRef.getDownloadURL();
+          coverURL = await imageRef.getDownloadURL();
+          songURL = await songRef.getDownloadURL();
         } catch (e) {
-          print('Error getting cover URL: $e');
+          print('Error getting cover URL: ${e.toString()}');
         }
-
         songData['coverURL'] = coverURL;
+        songData['songURL'] = songURL;
         var songModel = SongModel.fromJson(songData);
         songs.add(songModel.toEntity());
       }
 
       return Right(songs);
     } catch (e) {
-      return Left('An error has occurred: ' + e.toString());
+      return Left('An error has occurred: $e');
     }
   }
 
   @override
-  Future<Either> getPlaylist()async {
-   try {
+  Future<Either> getPlaylist() async {
+    try {
       List<SongEntity> songs = [];
       FirebaseStorage storage = FirebaseStorage.instance;
       FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -63,6 +66,7 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
       var data = await firestore
           .collection('Songs')
           .orderBy('releaseDate', descending: true)
+          .limit(10)
           .get();
 
       for (var element in data.docs) {
@@ -70,18 +74,23 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
         var artist = songData['artist'];
         var title = songData['title'];
         var coverURL = '';
+        var songURL = '';
 
-        Reference fileRef =
+        Reference imageRef =
             storage.ref().child('covers/${artist.trim()} - $title.jpeg');
+        Reference songRef =
+            storage.ref().child('songs/${artist.trim()} - $title.mp3');
 
         // Get the download URL for cover images
         try {
-          coverURL = await fileRef.getDownloadURL();
+          coverURL = await imageRef.getDownloadURL();
+          songURL = await songRef.getDownloadURL();
         } catch (e) {
           print('Error getting cover URL: $e');
         }
 
         songData['coverURL'] = coverURL;
+        songData['songURL'] = songURL;
         var songModel = SongModel.fromJson(songData);
         songs.add(songModel.toEntity());
       }

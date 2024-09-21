@@ -21,7 +21,7 @@ class NewSongs extends StatelessWidget {
             );
           } else if (state is NewSongsLoaded) {
             print('SONGS: ${state.songs}');
-            return _songs(state.songs);
+            return _songs(context, state.songs);
           } else if (state is NewSongsLoadFailure) {
             return Center(
               child: Text(state.message),
@@ -37,9 +37,12 @@ class NewSongs extends StatelessWidget {
   }
 }
 
-Widget _songs(List<SongEntity> songs) {
+Widget _songs(context, List<SongEntity> songs) {
   return Padding(
-    padding: const EdgeInsets.only(top: 16.0, left: 16.0,),
+    padding: const EdgeInsets.only(
+      top: 16.0,
+      left: 16.0,
+    ),
     child: SizedBox(
       height: 240,
       child: ListView.separated(
@@ -47,53 +50,57 @@ Widget _songs(List<SongEntity> songs) {
         separatorBuilder: (context, index) => const Divider(),
         itemCount: songs.length,
         itemBuilder: (context, index) {
-          return SizedBox(
-            width: 160,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 160,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        image: DecorationImage(
-                          image: NetworkImage(songs[index].coverURL),
-                          fit: BoxFit.cover,
+          return GestureDetector(
+            onTap: () => Navigator.pushNamed(context, '/song-player',
+                arguments: songs[index]),
+            child: SizedBox(
+              width: 160,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 160,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          image: DecorationImage(
+                            image: NetworkImage(songs[index].coverURL),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: PlayButtonIcon(
+                            dimensions: 40.0,
+                            iconSize: 25.0,
+                            onPressed: () {},
+                            translationValues:
+                                Matrix4.translationValues(10, 10, 0),
+                          ),
                         ),
                       ),
-                      child: Align(
-                        alignment: Alignment.bottomRight,
-                        child: PlayButtonIcon(
-                          dimensions: 40.0,
-                          iconSize: 25.0,
-                          onPressed: () {},
-                          translationValues:
-                              Matrix4.translationValues(10, 10, 0),
-                        ),
+                    ),
+                    Text(
+                      songs[index].title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
                       ),
+                      textAlign: TextAlign.left,
                     ),
-                  ),
-                  Text(
-                    songs[index].title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
+                    const SizedBox(height: 4),
+                    Text(
+                      songs[index].artist,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.left,
                     ),
-                    textAlign: TextAlign.left,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    songs[index].artist,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                    ),
-                    textAlign: TextAlign.left,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

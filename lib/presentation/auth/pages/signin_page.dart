@@ -81,6 +81,7 @@ class SigninPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
       child: TextField(
+
         controller: _emailController,
         decoration: const InputDecoration(
           hintText: 'Email',
@@ -93,6 +94,7 @@ class SigninPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
       child: TextField(
+        obscureText: true,
         controller: _passwordController,
         decoration: const InputDecoration(
           hintText: 'Password',
