@@ -39,6 +39,7 @@ class MainApp extends StatelessWidget {
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, mode) => MaterialApp(
+          debugShowCheckedModeBanner: false,
           onGenerateRoute: _appRouter.onGenerateRoute,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,

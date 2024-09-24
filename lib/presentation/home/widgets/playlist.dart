@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spotify_project/common/widgets/favorite_button.dart/favorite_button.dart';
 import 'package:spotify_project/core/configs/theme/app_colors.dart';
 import 'package:spotify_project/domain/entities/song/song.dart';
 import 'package:spotify_project/presentation/home/bloc/playlist_cubit.dart';
@@ -66,33 +67,25 @@ Widget _songs(List<SongEntity> songs) {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: ((context, index) {
-          return GestureDetector(
-            onTap: () => Navigator.pushNamed(context, '/song-player',
-                arguments: songs[index]),
-            child: ListTile(
-              tileColor: Colors.transparent,
-              selected: false,
-              leading: PlayButtonIcon(
-                dimensions: 50,
-                iconSize: 35,
-                onPressed: () {},
-              ),
-              title: Text(songs[index].title),
-              subtitle: Text(songs[index].artist),
-              trailing: SizedBox(
-                width: 100,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(songs[index].duration.toString().replaceAll('.', ':')),
-                    IconButton.filled(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.favorite_rounded,
-                          color: AppColors.grey,
-                        ))
-                  ],
-                ),
+          return ListTile(
+            tileColor: Colors.transparent,
+            selected: false,
+            leading: PlayButtonIcon(
+              dimensions: 50,
+              iconSize: 35,
+              onPressed: () => Navigator.pushNamed(context, '/song-player',
+                  arguments: songs[index]),
+            ),
+            title: Text(songs[index].title),
+            subtitle: Text(songs[index].artist),
+            trailing: SizedBox(
+              width: 100,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(songs[index].duration.toString().replaceAll('.', ':')),
+                  FavoriteButton(song: songs[index]),
+                ],
               ),
             ),
           );

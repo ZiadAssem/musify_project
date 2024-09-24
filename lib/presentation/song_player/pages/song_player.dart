@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_project/common/widgets/appbar/app_bar.dart';
+import 'package:spotify_project/common/widgets/favorite_button.dart/favorite_button.dart';
 import 'package:spotify_project/domain/entities/song/song.dart';
 import 'package:spotify_project/presentation/song_player/bloc/cubit/song_player_cubit.dart';
 
@@ -73,15 +74,7 @@ class SongPlayer extends StatelessWidget {
           ),
         ],
       ),
-      trailing: IconButton(
-        onPressed: () {},
-        icon: const Icon(
-          
-          Icons.favorite_border_rounded,
-          color: AppColors.darkGrey,
-          size: 30,
-        ),
-      ),
+      trailing: FavoriteButton(song: song),
       contentPadding:
           const EdgeInsets.all(16), // Padding for the ListTile itself
     );

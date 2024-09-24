@@ -166,7 +166,6 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
 
   @override
   Future<bool> isFavorite(String songId) async {
-    print('Testing isFavorite');
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
       final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -180,7 +179,6 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
           .collection('Favorites')
           .where('songId', isEqualTo: songId)
           .get();
-      print('TESTING: ${favoriteSongs.docs.length}');
       if (favoriteSongs.docs.isNotEmpty) {
         return true;
       } else {
