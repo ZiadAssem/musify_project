@@ -32,6 +32,6 @@ class _SplashPageState extends State<SplashPage> {
   Future<void> redirect() async{
     await Future.delayed(const Duration(seconds: 2));
     if (!context.mounted) return;
-    Navigator.of(context).pushNamed('/get-started');
+    Navigator.of(context).popAndPushNamed('/get-started');
   }
 }

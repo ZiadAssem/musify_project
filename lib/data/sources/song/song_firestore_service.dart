@@ -10,10 +10,10 @@ import '../../../service_locater.dart';
 
 abstract class SongFirebaseService {
   Future<Either> getNewSongs();
-  Future<Either>
-      getPlaylist(); //Hypothetical method, there are no actual playlists
+  Future<Either> getPlaylist(); //Hypothetical method,
   Future<Either> addOrRemoveToFavorites(String songId);
   Future<bool> isFavorite(String songId);
+  Future<Either> getUserFavoriteSongs();
 }
 
 class SongFirebaseServiceImpl implements SongFirebaseService {
@@ -32,7 +32,7 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
 
       for (var element in data.docs) {
         var songData = element.data();
-        var artist = songData['artist'];
+        var artist = songData['artist'] ?? '';
         var title = songData['title'];
         var coverURL = '';
         var songURL = '';
@@ -48,9 +48,8 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
         try {
           coverURL = await imageRef.getDownloadURL();
           songURL = await songRef.getDownloadURL();
-                  isFavorite =
-            await sl<IsFavoriteUseCase>().call(params: element.reference.id);
-
+          isFavorite =
+              await sl<IsFavoriteUseCase>().call(params: element.reference.id);
         } catch (e) {
           print('Error getting cover URL: ${e.toString()}');
         }
@@ -76,7 +75,6 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
   Future<Either> getPlaylist() async {
     try {
       List<SongEntity> songs = [];
-      FirebaseStorage storage = FirebaseStorage.instance;
       FirebaseFirestore firestore = FirebaseFirestore.instance;
 
       var data = await firestore
@@ -94,27 +92,15 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
         bool isFavorite = false;
         var songId = element.reference.id;
 
-        Reference imageRef =
-            storage.ref().child('covers/${artist.trim()} - $title.jpeg');
-        Reference songRef =
-            storage.ref().child('songs/${artist.trim()} - $title.mp3');
-
-        // Get the download URL for cover images
-        try {
-          coverURL = await imageRef.getDownloadURL();
-          songURL = await songRef.getDownloadURL();
-          isFavorite =
+        coverURL = await _getCoverDownloadURL(artist, title);
+        songURL = await _getSongDownloadURL(artist, title);
+        isFavorite =
             await sl<IsFavoriteUseCase>().call(params: element.reference.id);
-          
-        } catch (e) {
-          print('Error getting cover URL: $e');
-        }
 
         songData['coverURL'] = coverURL;
         songData['songURL'] = songURL;
         songData['isFavorite'] = isFavorite;
         songData['songId'] = songId;
-                
 
         var songModel = SongModel.fromJson(songData);
 
@@ -187,5 +173,75 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
     } catch (e) {
       return false;
     }
+  }
+
+  @override
+  Future<Either> getUserFavoriteSongs() async {
+    try {
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final FirebaseFirestore firestore = FirebaseFirestore.instance;
+      var user = auth.currentUser;
+      String uId = user!.uid;
+      List<SongEntity> favoriteSongs = [];
+
+      QuerySnapshot favoritesSnapshot = await firestore
+          .collection('Users')
+          .doc(uId)
+          .collection('Favorites')
+          .get();
+
+      for (var element in favoritesSnapshot.docs) {
+        String songId = element['songId'];
+        SongEntity song = await _getSong(songId, true);
+        favoriteSongs.add(song);
+      }
+
+      return Right(favoriteSongs);
+    } on Exception catch (e) {
+      return Left('An error has occurred: $e');
+    }
+  }
+
+  Future<SongEntity> _getSong(String songID, bool isFavorite) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    var data = await firestore.collection('Songs').doc(songID).get();
+
+    var songData = data.data()!;
+    var artist = songData['artist'];
+    var title = songData['title'];
+    var coverURL = '';
+    var songURL = '';
+
+    coverURL = await _getCoverDownloadURL(artist, title);
+    songURL = await _getSongDownloadURL(artist, title);
+
+    songData['coverURL'] = coverURL;
+    songData['songURL'] = songURL;
+    songData['isFavorite'] = isFavorite;
+    songData['songId'] = songID;
+    var songModel = SongModel.fromJson(songData);
+    
+    return songModel.toEntity();
+  }
+
+  Future<String> _getSongDownloadURL(String artist, String title) async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+
+    Reference songRef =
+        storage.ref().child('songs/${artist.trim()} - $title.mp3');
+
+    String songURL = await songRef.getDownloadURL();
+    return songURL;
+  }
+
+  Future<String> _getCoverDownloadURL(String artist, String title) async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+
+    Reference imageRef =
+        storage.ref().child('covers/${artist.trim()} - $title.jpeg');
+
+    String coverURL = await imageRef.getDownloadURL();
+
+    return coverURL;
   }
 }

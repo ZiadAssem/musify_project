@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:spotify_project/core/configs/theme/app_theme.dart';
 import 'package:spotify_project/firebase_options.dart';
-import 'package:spotify_project/presentation/router/app_router.dart';
+import 'package:spotify_project/core/router/app_router.dart';
 import 'package:spotify_project/presentation/splash/pages/splash.dart';
 import 'package:spotify_project/service_locater.dart';
 

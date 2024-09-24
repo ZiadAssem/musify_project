@@ -29,6 +29,12 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BasicAppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () => Navigator.pushNamed(context, '/profile'),
+          ),
+        ],
         hideBackButton: true,
         title: SvgPicture.asset(
           AppVectors.logo,
@@ -76,13 +82,17 @@ class _HomePageState extends State<HomePage>
 
   Widget _tabs() {
     return Padding(
-      padding: const EdgeInsets.only(top: 16.0,),
+      padding: const EdgeInsets.only(
+        top: 16.0,
+      ),
       child: TabBar(
           controller: _tabController,
           isScrollable: true,
           labelColor: context.isDarkMode ? Colors.white : Colors.black,
           tabs: const [
-            Tab(text: 'New',),
+            Tab(
+              text: 'New',
+            ),
             Tab(text: 'Videos'),
             Tab(text: 'Artists'),
             Tab(text: 'Podcasts'),
