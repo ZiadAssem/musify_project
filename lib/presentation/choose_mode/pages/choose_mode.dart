@@ -30,9 +30,8 @@ class ChooseModePage extends StatelessWidget {
           ),
           Container(color: Colors.black.withOpacity(0.15)),
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 40,
-              vertical: 40,
+            padding: const EdgeInsets.fromLTRB(
+             40,0,40,40
             ),
             child: Column(
               children: [

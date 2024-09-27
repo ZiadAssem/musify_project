@@ -31,9 +31,11 @@ class SigninPage extends StatelessWidget {
           horizontal: 30.0,
         ),
         child: SingleChildScrollView(
+          physics:BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: 50),
               _registerText(),
               _emailField(context),
               _passwordField(context),
@@ -67,13 +69,26 @@ class SigninPage extends StatelessWidget {
   }
 
   Widget _registerText() {
-    return const Text(
-      'Sign In',
-      style: TextStyle(
-        fontSize: 26,
-        fontWeight: FontWeight.bold,
-      ),
-      textAlign: TextAlign.center,
+    return const Column(
+      children: [
+         Text(
+          'Sign In',
+          style: TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(height: 20),
+        Text(
+          'Get back in, enjoy your customized playlists and continue listening to your favorite artists!',
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.grey,
+          ),
+          textAlign: TextAlign.center,
+        )
+      ],
     );
   }
 

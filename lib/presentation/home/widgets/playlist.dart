@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spotify_project/common/bloc/favorite_button/favorite_button_cubit.dart';
 import 'package:spotify_project/common/widgets/favorite_button.dart/favorite_button.dart';
 import 'package:spotify_project/core/configs/theme/app_colors.dart';
 import 'package:spotify_project/domain/entities/song/song.dart';
 import 'package:spotify_project/presentation/home/bloc/playlist_cubit.dart';
 import 'package:spotify_project/presentation/home/widgets/play_button.dart';
+import 'package:spotify_project/presentation/home/widgets/shimmer/playlist_shimmer.dart';
+import 'package:spotify_project/presentation/home/widgets/shimmer/shimmer_loading.dart';
+import 'shimmer/shimmer.dart';
 
+import '../../../common/bloc/favorite_button/favorite_butoon_state.dart';
 import '../bloc/playlist_state.dart';
 
 class Playlist extends StatelessWidget {
@@ -19,10 +24,15 @@ class Playlist extends StatelessWidget {
         builder: (context, state) {
           if (state == const PlaylistLoading()) {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: PlaylistShimmer(),
             );
           } else if (state is PlaylistLoaded) {
-            return Column(
+            return  
+            // Shimmer(
+            //   linearGradient: AppColors.shimmerGradient,
+            //   child: PlaylistShimmer(),
+              // );
+            Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -74,7 +84,8 @@ Widget _songs(List<SongEntity> songs) {
               dimensions: 50,
               iconSize: 35,
               onPressed: () => Navigator.pushNamed(context, '/song-player',
-                  arguments: songs[index]),
+                      arguments: songs[index])
+                  
             ),
             title: Text(songs[index].title),
             subtitle: Text(songs[index].artist),
@@ -84,7 +95,23 @@ Widget _songs(List<SongEntity> songs) {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(songs[index].duration.toString().replaceAll('.', ':')),
-                  FavoriteButton(song: songs[index]),
+                  BlocProvider(
+                    create: (context) => FavoriteButtonCubit(),
+                    child:
+                        BlocBuilder<FavoriteButtonCubit, FavoriteButtonState>(
+                      builder: (context, state) {
+                        if (state is FavoriteButtonInitial) {
+                          return FavoriteButton(song: songs[index]);
+                        } else if (state is FavoriteButtonUpdated) {
+                          return FavoriteButton(song: songs[index]);
+                        } else {
+                          return const Center(
+                            child: Text('Something went wrong'),
+                          );
+                        }
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),

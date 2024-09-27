@@ -28,7 +28,8 @@ class ProfilePage extends StatelessWidget {
           DeviceOrientation.portraitUp,
           DeviceOrientation.portraitDown,
         ]);
-        return true;
+        Navigator.pop(context, true);
+        return false;
       },
       child: Scaffold(
         appBar: const BasicAppBar(

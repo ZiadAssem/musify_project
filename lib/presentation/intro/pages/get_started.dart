@@ -29,9 +29,12 @@ class GetStartedPage extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Align(
-                  alignment: Alignment.topCenter,
-                  child: SvgPicture.asset(AppVectors.logo)),
+              SizedBox(
+                height: 100,
+                child: Align(
+                    alignment: Alignment.topCenter,
+                    child: SvgPicture.asset(AppVectors.logo)),
+              ),
               const Spacer(),
               const Text(
                 'Enjoy Listening To Music',

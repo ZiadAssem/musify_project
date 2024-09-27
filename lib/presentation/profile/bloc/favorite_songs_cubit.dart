@@ -23,4 +23,6 @@ class FavoriteSongsCubit extends Cubit<FavoriteSongsState> {
     favoriteSongs.removeAt(index);
     emit(FavoriteSongsLoaded(songs: favoriteSongs));
   }
+
+  
 }

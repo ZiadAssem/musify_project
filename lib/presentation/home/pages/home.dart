@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:spotify_project/common/helpers/is_dark_mode.dart';
 import 'package:spotify_project/common/widgets/appbar/app_bar.dart';
@@ -6,6 +7,8 @@ import 'package:spotify_project/core/configs/assets/app_images.dart';
 import 'package:spotify_project/core/configs/assets/app_vectors.dart';
 import 'package:spotify_project/presentation/home/widgets/new_songs.dart';
 import 'package:spotify_project/presentation/home/widgets/playlist.dart';
+
+import '../bloc/playlist_cubit.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -32,7 +35,11 @@ class _HomePageState extends State<HomePage>
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
-            onPressed: () => Navigator.pushNamed(context, '/profile'),
+            onPressed: () => Navigator.pushNamed(context, '/profile') .then((result) {
+                if (result == true) {
+                  print('Result is true');
+                }
+              }),
           ),
         ],
         hideBackButton: true,
