@@ -4,9 +4,9 @@ import 'package:spotify_project/domain/repository/song/song.dart';
 import 'package:spotify_project/service_locater.dart';
 
 
-class GetPlaylistUseCase implements UseCase<Either, dynamic> {
+class GetAllSongsUseCase implements UseCase<Either, dynamic> {
   @override
   Future<Either> call({params}) async {
-    return sl<SongsRepository>().getPlaylist();
+    return sl<SongsRepository>().getAllSongs();
   }
 }

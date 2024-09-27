@@ -7,7 +7,7 @@ import 'package:spotify_project/domain/usecases/auth/signup.dart';
 import 'package:spotify_project/domain/usecases/song/add_or_remove_favorite.dart';
 import 'package:spotify_project/domain/usecases/song/get_favorite_songs.dart';
 import 'package:spotify_project/domain/usecases/song/get_new_songs.dart';
-import 'package:spotify_project/domain/usecases/song/get_playlist.dart';
+import 'package:spotify_project/domain/usecases/song/get_all_songs.dart';
 import 'package:spotify_project/domain/usecases/song/is_favorite.dart';
 
 import 'data/repository/auth/auth_repository_impl.dart';
@@ -25,7 +25,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<GetNewSongsUseCase>(GetNewSongsUseCase());
   sl.registerSingleton<SignupUseCase>(SignupUseCase());
   sl.registerSingleton<SigninUseCase>(SigninUseCase());
-  sl.registerSingleton<GetPlaylistUseCase>(GetPlaylistUseCase());
+  sl.registerSingleton<GetAllSongsUseCase>(GetAllSongsUseCase());
   sl.registerSingleton<AddOrRemoveToFavoritesUseCase>(AddOrRemoveToFavoritesUseCase());
   sl.registerSingleton<IsFavoriteUseCase>(IsFavoriteUseCase());
   sl.registerSingleton<GetUserUseCase>(GetUserUseCase());

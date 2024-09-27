@@ -4,59 +4,53 @@ import 'package:spotify_project/common/bloc/favorite_button/favorite_button_cubi
 import 'package:spotify_project/common/widgets/favorite_button.dart/favorite_button.dart';
 import 'package:spotify_project/core/configs/theme/app_colors.dart';
 import 'package:spotify_project/domain/entities/song/song.dart';
-import 'package:spotify_project/presentation/home/bloc/playlist_cubit.dart';
 import 'package:spotify_project/presentation/home/widgets/play_button.dart';
-import 'package:spotify_project/presentation/home/widgets/shimmer/playlist_shimmer.dart';
-import 'package:spotify_project/presentation/home/widgets/shimmer/shimmer_loading.dart';
-import 'shimmer/shimmer.dart';
 
 import '../../../common/bloc/favorite_button/favorite_butoon_state.dart';
-import '../bloc/playlist_state.dart';
+import '../bloc/all_songs_cubit.dart';
+import '../bloc/all_songs_state.dart';
 
-class Playlist extends StatelessWidget {
-  const Playlist({super.key});
+class AllSongs extends StatelessWidget {
+  const AllSongs({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => PlaylistCubit()..getPlaylist(),
-      child: BlocBuilder<PlaylistCubit, PlaylistState>(
+      create: (_) => AllSongsCubit()..getAllSongs(),
+      child: BlocBuilder<AllSongsCubit, AllSongsState>(
         builder: (context, state) {
-          if (state == const PlaylistLoading()) {
+          if (state == const AllSongsLoading()) {
             return const Center(
-              child: PlaylistShimmer(),
+              child: CircularProgressIndicator(),
             );
-          } else if (state is PlaylistLoaded) {
-            return  
-            // Shimmer(
-            //   linearGradient: AppColors.shimmerGradient,
-            //   child: PlaylistShimmer(),
-              // );
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Playlist',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'See More',
-                            style: TextStyle(color: AppColors.primary),
-                          ))
-                    ],
+          } else if (state is AllSongsLoaded) {
+            return Expanded(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'All Songs',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        TextButton(
+                            onPressed: () {},
+                            child: const Text(
+                              'See More',
+                              style: TextStyle(color: AppColors.primary),
+                            ))
+                      ],
+                    ),
                   ),
-                ),
-                _songs(state.songs),
-              ],
+                  _songs(state.songs),
+                ],
+              ),
             );
-          } else if (state is PlaylistLoadFailure) {
+          } else if (state is AllSongsLoadFailure) {
             return Center(
               child: Text(state.message),
             );
@@ -72,21 +66,19 @@ class Playlist extends StatelessWidget {
 }
 
 Widget _songs(List<SongEntity> songs) {
-  return SizedBox(
+  return Expanded(
     child: ListView.separated(
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         itemBuilder: ((context, index) {
           return ListTile(
             tileColor: Colors.transparent,
             selected: false,
             leading: PlayButtonIcon(
-              dimensions: 50,
-              iconSize: 35,
-              onPressed: () => Navigator.pushNamed(context, '/song-player',
-                      arguments: songs[index])
-                  
-            ),
+                dimensions: 50,
+                iconSize: 35,
+                onPressed: () => Navigator.pushNamed(context, '/song-player',
+                    arguments: songs[index])),
             title: Text(songs[index].title),
             subtitle: Text(songs[index].artist),
             trailing: SizedBox(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spotify_project/presentation/home/bloc/playlist_cubit.dart';
+import 'package:spotify_project/presentation/home/bloc/all_songs_cubit.dart';
 import '../../../common/helpers/is_dark_mode.dart';
 import '../../../common/widgets/appbar/app_bar.dart';
 import '../../../common/widgets/favorite_button.dart/favorite_button.dart';
@@ -124,7 +124,7 @@ class ProfilePage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => PlaylistCubit(),
+          create: (context) => AllSongsCubit(),
         ),
         BlocProvider(
           create: (context) => FavoriteSongsCubit()..getFavoriteSongs(),

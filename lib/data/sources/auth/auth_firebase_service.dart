@@ -18,6 +18,7 @@ abstract class AuthFirebaseService {
 class AuthFirebaseServiceImpl extends AuthFirebaseService {
   @override
   Future<Either> signin(SigninUserRequest signinUserRequest) async {
+    print('test: abstract into AuthFirebaseServiceImpl: signin: ');
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: signinUserRequest.email, password: signinUserRequest.password);

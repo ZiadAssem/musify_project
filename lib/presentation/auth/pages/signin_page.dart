@@ -35,7 +35,7 @@ class SigninPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 50),
+             const SizedBox(height: 50),
               _registerText(),
               _emailField(context),
               _passwordField(context),

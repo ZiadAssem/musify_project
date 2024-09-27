@@ -10,7 +10,7 @@ import '../../../service_locater.dart';
 
 abstract class SongFirebaseService {
   Future<Either> getNewSongs();
-  Future<Either> getPlaylist(); //Hypothetical method,
+  Future<Either> getAllSongs(); //Hypothetical method,
   Future<Either> addOrRemoveToFavorites(String songId);
   Future<bool> isFavorite(String songId);
   Future<Either> getUserFavoriteSongs();
@@ -72,7 +72,7 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
   }
 
   @override
-  Future<Either> getPlaylist() async {
+  Future<Either> getAllSongs() async {
     try {
       List<SongEntity> songs = [];
       FirebaseFirestore firestore = FirebaseFirestore.instance;

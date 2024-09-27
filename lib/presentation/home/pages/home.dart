@@ -6,9 +6,9 @@ import 'package:spotify_project/common/widgets/appbar/app_bar.dart';
 import 'package:spotify_project/core/configs/assets/app_images.dart';
 import 'package:spotify_project/core/configs/assets/app_vectors.dart';
 import 'package:spotify_project/presentation/home/widgets/new_songs.dart';
-import 'package:spotify_project/presentation/home/widgets/playlist.dart';
+import 'package:spotify_project/presentation/home/widgets/all_songs.dart';
 
-import '../bloc/playlist_cubit.dart';
+import '../bloc/all_songs_cubit.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -35,11 +35,12 @@ class _HomePageState extends State<HomePage>
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
-            onPressed: () => Navigator.pushNamed(context, '/profile') .then((result) {
-                if (result == true) {
-                  print('Result is true');
-                }
-              }),
+            onPressed: () =>
+                Navigator.pushNamed(context, '/profile').then((result) {
+              if (result == true) {
+                print('Result is true');
+              }
+            }),
           ),
         ],
         hideBackButton: true,
@@ -49,17 +50,30 @@ class _HomePageState extends State<HomePage>
           width: 40,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _homeTopCard(),
-            _tabs(),
-            const NewSongs(),
-            const SizedBox(height: 8),
-            const Playlist(),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _homeTopCard(),
+          _tabs(),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+             const Column(
+               mainAxisAlignment: MainAxisAlignment.start,
+               children: [
+                  NewSongs(),
+                  AllSongs(),
+               ],
+             ),
+              Container(),
+              Container(),
+              Container(),
+          
+            ]),
+          )
+          
+        ],
       ),
     );
   }
@@ -96,14 +110,20 @@ class _HomePageState extends State<HomePage>
           controller: _tabController,
           isScrollable: true,
           labelColor: context.isDarkMode ? Colors.white : Colors.black,
-          tabs: const [
+          tabs: [
             Tab(
-              text: 'New',
+              text: 'New Songs',
+              
             ),
-            Tab(text: 'Videos'),
-            Tab(text: 'Artists'),
-            Tab(text: 'Podcasts'),
+            const Tab(text: 'Playlists'),
+            const Tab(text: 'Artists'),
+            const Tab(text: 'Podcasts'),
           ]),
     );
+  }
+    @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 }

@@ -9,6 +9,7 @@ import '../../sources/auth/auth_firebase_service.dart';
 class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Either> signin(SigninUserRequest signinUserRequest) async {
+    print('test: Entered domain AbstractAuthRepo into data AuthRepoImpl:');
     return await sl<AuthFirebaseService>().signin(signinUserRequest);
   }
 
