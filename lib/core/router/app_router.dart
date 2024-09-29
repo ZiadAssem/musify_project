@@ -5,6 +5,7 @@ import 'package:spotify_project/presentation/auth/pages/signup.dart';
 import 'package:spotify_project/presentation/auth/pages/signup_or_sigin.dart';
 import 'package:spotify_project/presentation/choose_mode/pages/choose_mode.dart';
 import 'package:spotify_project/presentation/intro/pages/get_started.dart';
+import 'package:spotify_project/presentation/playlists/pages/playlists.dart';
 import 'package:spotify_project/presentation/song_player/pages/song_player.dart';
 import '../../presentation/home/pages/home.dart';
 import '../../presentation/profile/pages/profile.dart';
@@ -26,6 +27,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => HomePage());
       case '/profile':
         return MaterialPageRoute(builder: (_) => const ProfilePage());
+      case '/playlists':
+        return MaterialPageRoute(builder: (_) => const PlaylistsListPage());
       case '/song-player':
         final song = routeSettings.arguments as SongEntity;
         return MaterialPageRoute(

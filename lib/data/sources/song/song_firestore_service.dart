@@ -80,7 +80,7 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
       var data = await firestore
           .collection('Songs')
           .orderBy('releaseDate', descending: true)
-          .limit(5)
+        
           .get();
 
       for (var element in data.docs) {

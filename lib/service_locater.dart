@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:spotify_project/data/repository/playlist/playlist_repository_impl.dart';
 import 'package:spotify_project/data/repository/song/song_repository_impl.dart';
 import 'package:spotify_project/data/sources/song/song_firestore_service.dart';
 import 'package:spotify_project/domain/repository/song/song.dart';
@@ -12,8 +13,11 @@ import 'package:spotify_project/domain/usecases/song/is_favorite.dart';
 
 import 'data/repository/auth/auth_repository_impl.dart';
 import 'data/sources/auth/auth_firebase_service.dart';
+import 'data/sources/playlist/playlist_firestore_service.dart';
 import 'domain/repository/auth/auth.dart';
+import 'domain/repository/playlist/playlist.dart';
 import 'domain/usecases/auth/signin.dart';
+import 'domain/usecases/playlist/get_all_playlists.dart';
 
 final sl = GetIt.instance;
 
@@ -30,4 +34,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<IsFavoriteUseCase>(IsFavoriteUseCase());
   sl.registerSingleton<GetUserUseCase>(GetUserUseCase());
   sl.registerSingleton<GetFavoriteSongsUseCase>(GetFavoriteSongsUseCase());
+  sl.registerSingleton<PlaylistRepository>(PlaylistRepositoryImpl());
+  sl.registerSingleton<PlaylistFirebaseService>(PlaylistFirebaseServiceImpl());
+  sl.registerSingleton<GetAllPlaylistsUseCase>(GetAllPlaylistsUseCase());
 }

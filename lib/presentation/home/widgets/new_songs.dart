@@ -46,6 +46,7 @@ Widget _songs(context, List<SongEntity> songs) {
     child: SizedBox(
       height: 240,
       child: ListView.separated(
+        physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         separatorBuilder: (context, index) => const Divider(),
         itemCount: songs.length,

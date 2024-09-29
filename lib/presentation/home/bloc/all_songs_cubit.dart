@@ -11,12 +11,31 @@ class AllSongsCubit extends Cubit<AllSongsState> {
     var returnedSongs = await sl<GetAllSongsUseCase>().call();
 
     returnedSongs.fold((l) {
-      emit(AllSongsLoadFailure(
-        message: l.toString(),
-      ));
+      emit(AllSongsLoadFailure(message: l.toString()));
     }, (data) {
       emit(AllSongsLoaded(songs: data));
     });
+  }
+
+  void sortSongsBy(String sortOption) {
+    if (state is AllSongsLoaded) {
+      final loadedState = state as AllSongsLoaded;
+      List<SongEntity> sortedSongs = List.from(loadedState.songs);
+
+      switch (sortOption) {
+        case 'Name':
+          sortedSongs.sort((a, b) => a.title.compareTo(b.title));
+          break;
+        case 'Artist':
+          sortedSongs.sort((a, b) => a.artist.compareTo(b.artist));
+          break;
+        case 'Release Date':
+          sortedSongs.sort((a, b) => a.releaseDate.compareTo(b.releaseDate));
+          break;
+      }
+
+      emit(AllSongsLoaded(songs: sortedSongs));
+    }
   }
 
   void updateSongFavoriteStatus(SongEntity song) {

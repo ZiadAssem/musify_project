@@ -8,6 +8,7 @@ import 'package:spotify_project/core/configs/assets/app_vectors.dart';
 import 'package:spotify_project/presentation/home/widgets/new_songs.dart';
 import 'package:spotify_project/presentation/home/widgets/all_songs.dart';
 
+import '../../../core/configs/theme/app_colors.dart';
 import '../bloc/all_songs_cubit.dart';
 
 class HomePage extends StatefulWidget {
@@ -36,10 +37,8 @@ class _HomePageState extends State<HomePage>
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () =>
-                Navigator.pushNamed(context, '/profile').then((result) {
-              if (result == true) {
-                print('Result is true');
-              }
+                Navigator.pushReplacementNamed(context, '/profile').then((result) {
+             
             }),
           ),
         ],
@@ -56,23 +55,41 @@ class _HomePageState extends State<HomePage>
           _homeTopCard(),
           _tabs(),
           Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-             const Column(
-               mainAxisAlignment: MainAxisAlignment.start,
-               children: [
-                  NewSongs(),
-                  AllSongs(),
-               ],
-             ),
+            child: TabBarView(controller: _tabController, children: [
+              SingleChildScrollView(
+
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 250, child: NewSongs()),
+                     Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'All Songs',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      _sortPopUpMenu(context),
+                    ],
+                  ),
+                ),
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height -
+                            kToolbarHeight -
+                            250,
+                        child: const AllSongs()),
+                  ],
+                ),
+              ),
               Container(),
               Container(),
               Container(),
-          
             ]),
           )
-          
         ],
       ),
     );
@@ -110,18 +127,50 @@ class _HomePageState extends State<HomePage>
           controller: _tabController,
           isScrollable: true,
           labelColor: context.isDarkMode ? Colors.white : Colors.black,
-          tabs: [
+          tabs: const [
             Tab(
               text: 'New Songs',
-              
             ),
-            const Tab(text: 'Playlists'),
-            const Tab(text: 'Artists'),
-            const Tab(text: 'Podcasts'),
+            Tab(text: 'Playlists'),
+            Tab(text: 'Artists'),
+            Tab(text: 'Podcasts'),
           ]),
     );
   }
-    @override
+Widget _sortPopUpMenu(context) {
+  return PopupMenuButton<String>(
+    onSelected: (String sortOption) {
+      _sortSongs(context, sortOption);
+    },
+    itemBuilder: (BuildContext context) {
+      return [
+        const PopupMenuItem(
+          value: 'Name',
+          child: Text('Sort by Name'),
+        ),
+        const PopupMenuItem(
+          value: 'Artist',
+          child: Text('Sort by Artist'),
+        ),
+        const PopupMenuItem(
+          value: 'Release Date',
+          child: Text('Sort by Release Date'),
+        ),
+      ];
+    },
+    child: const Text(
+      'Sort by',
+      style: TextStyle(color: AppColors.primary),
+    ),
+  );
+}
+
+void _sortSongs(BuildContext context, String sortOption) {
+  final cubit = context.read<AllSongsCubit>();
+  cubit.sortSongsBy(sortOption);
+}
+
+  @override
   void dispose() {
     _tabController.dispose();
     super.dispose();

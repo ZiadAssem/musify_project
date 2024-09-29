@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spotify_project/presentation/home/bloc/all_songs_cubit.dart';
+import 'package:spotify_project/core/configs/theme/app_colors.dart';
 import '../../../common/helpers/is_dark_mode.dart';
 import '../../../common/widgets/appbar/app_bar.dart';
 import '../../../common/widgets/favorite_button.dart/favorite_button.dart';
@@ -12,7 +12,6 @@ import '../bloc/profile_info_state.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
-  
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@ class ProfilePage extends StatelessWidget {
           DeviceOrientation.portraitUp,
           DeviceOrientation.portraitDown,
         ]);
-        Navigator.pop(context, true);
+        Navigator.pushReplacementNamed(context, '/root');
         return false;
       },
       child: Scaffold(
@@ -40,6 +39,12 @@ class ProfilePage extends StatelessWidget {
             ? Column(
                 children: [
                   _profileInfo(context),
+                  const SizedBox(height: 25),
+                  SizedBox(
+                    height: 70,
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: _buttonList(context),
+                  ),
                   const SizedBox(height: 25),
                   _favoriteSongs(),
                 ],
@@ -63,7 +68,7 @@ class ProfilePage extends StatelessWidget {
       create: (context) => ProfileInfoCubit()..getUser(),
       child: Container(
         height: MediaQuery.of(context).orientation == Orientation.portrait
-            ? MediaQuery.of(context).size.height * 0.3
+            ? MediaQuery.of(context).size.height * 0.15
             : MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
@@ -80,7 +85,8 @@ class ProfilePage extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             } else if (state is ProfileInfoLoaded) {
-              return Column(
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const SizedBox(height: 20),
                   CircleAvatar(
@@ -88,20 +94,25 @@ class ProfilePage extends StatelessWidget {
                     backgroundImage: NetworkImage(state.user.profileImageURL!),
                   ),
                   const SizedBox(height: 10),
-                  Text(
-                    state.user.fullName!,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    state.user.email!,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w300,
-                    ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        state.user.fullName!,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        state.user.email!,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(
                     height: 20,
@@ -120,16 +131,63 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _favoriteSongs() {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => AllSongsCubit(),
-        ),
-        BlocProvider(
-          create: (context) => FavoriteSongsCubit()..getFavoriteSongs(),
-        ),
+  Widget _buttonList(context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _squareButton(() {
+          Navigator.pushNamed(context, '/playlists');
+        }, 'Playlists', icon: Icons.playlist_play),
+        _squareButton(() {}, 'Artists', icon: Icons.person),
+        _squareButton(() {}, 'Albums', icon: Icons.album),
+        _squareButton(() {}, 'Genres', icon: Icons.library_music),
       ],
+    );
+  }
+
+  Widget _squareButton(Function() onTap, String title, {IconData? icon}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 80,
+        width: 80,
+        decoration: BoxDecoration(
+          color: AppColors.darkGrey,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  icon,
+                  size: 30,
+                ),
+              )
+            else
+              const SizedBox(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 8.0),
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _favoriteSongs() {
+    return BlocProvider(
+      create: (context) => FavoriteSongsCubit()..getFavoriteSongs(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -193,9 +251,10 @@ class ProfilePage extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               SizedBox(
-                width: MediaQuery.of(context).orientation == Orientation.portrait?
-                 MediaQuery.of(context).size.width * 0.3:
-                 MediaQuery.of(context).size.width * 0.2,
+                width:
+                    MediaQuery.of(context).orientation == Orientation.portrait
+                        ? MediaQuery.of(context).size.width * 0.3
+                        : MediaQuery.of(context).size.width * 0.2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -228,9 +287,9 @@ class ProfilePage extends StatelessWidget {
                 song: state.songs[index],
                 function: () {
                   // context
-                      // .read<PlaylistCubit>()
-                      // .updateSongFavoriteStatus(
-                      //     state.songs[index]);
+                  // .read<PlaylistCubit>()
+                  // .updateSongFavoriteStatus(
+                  //     state.songs[index]);
                   context.read<FavoriteSongsCubit>().removeFavoriteSong(index);
                 },
               ),
