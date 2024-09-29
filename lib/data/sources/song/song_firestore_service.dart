@@ -11,6 +11,7 @@ import '../../../service_locater.dart';
 abstract class SongFirebaseService {
   Future<Either> getNewSongs();
   Future<Either> getAllSongs(); //Hypothetical method,
+  Future<Either> getPlaylistSongs(List<String> songURLs);
   Future<Either> addOrRemoveToFavorites(String songId);
   Future<bool> isFavorite(String songId);
   Future<Either> getUserFavoriteSongs();
@@ -113,6 +114,21 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
     } catch (e) {
       return Left('An error has occurred: $e');
     }
+  }
+
+  @override
+  Future<Either> getPlaylistSongs(List<String> songURLs) async {
+    try {
+      List<SongEntity> playlistSongs = [];
+
+     for (var songURL in songURLs){
+        playlistSongs.add(await _getSong(songURL, false));
+     }
+
+      return Right(playlistSongs);
+    } on Exception catch (e) {
+      return Left('An error has occurred: $e');
+    }     
   }
 
   @override

@@ -20,13 +20,10 @@ class PlaylistFirebaseServiceImpl implements PlaylistFirebaseService{
     try{
       var data = await firestore.collection('Users').doc(userId).collection('Playlists').get();
       for(var element in data.docs){
-        print(element.data());
-        final List<String>? songURLs = List<String>.from(element['songURLs']);
+        final List<String> songURLs = List<String>.from(element['songURLs']);
         element.data()['songURLs'] = songURLs;
         final playlistModel = PlaylistModel.fromJson(element.data());
-        print('model'+ playlistModel.toString());
         final playlistEntity = playlistModel.toEntity();
-        print(playlistEntity);
         playlists.add(playlistEntity);
 
       }

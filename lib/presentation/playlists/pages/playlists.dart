@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_project/common/widgets/appbar/app_bar.dart';
 import 'package:spotify_project/domain/entities/playlist/playlist.dart';
-import 'package:spotify_project/domain/entities/song/song.dart';
 
 import '../bloc/playlists_cubit.dart';
 import '../bloc/playlists_state.dart';
@@ -13,14 +12,14 @@ class PlaylistsListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BasicAppBar(
+      appBar: const BasicAppBar(
         title:  Text('Playlists'),
       ),
       body: BlocProvider(
         create: (_) => PlaylistsCubit()..fetchPlaylists(),
         child: BlocBuilder<PlaylistsCubit, PlaylistsState>(
           builder: (context, state) {
-            if (state ==  PlaylistsLoading()) {
+            if (state is  PlaylistsLoading) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
@@ -43,17 +42,24 @@ class PlaylistsListPage extends StatelessWidget {
 
   Widget _playlists(List<PlaylistEntity> playlists) {
     return ListView.separated(
+        
         shrinkWrap: true,
         physics: const BouncingScrollPhysics(),
         itemBuilder: ((context, index) {
-          return ListTile(
-            tileColor: Colors.transparent,
-            selected: false,
-            leading: playlists[index].imageURL != null
-                ? Image.network(playlists[index].imageURL!)
-                : const Icon(Icons.image),
-            title: Text(playlists[index].title!),
-            subtitle: Text(playlists[index].description!,overflow: TextOverflow.ellipsis,),
+          return GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/playlist-details',
+                  arguments: playlists[index].songURLs);
+              },
+            child: ListTile(
+              tileColor: Colors.transparent,
+              selected: false,
+              leading: playlists[index].imageURL != null
+                  ? Image.network(playlists[index].imageURL!)
+                  : const Icon(Icons.image),
+              title: Text(playlists[index].title!),
+              subtitle: Text(playlists[index].description!,overflow: TextOverflow.ellipsis,),
+            ),
           );
         }),
         separatorBuilder: (context, index) => const Divider(),
