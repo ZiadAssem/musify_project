@@ -38,10 +38,13 @@ class AppRouter {
                   songURLs: songURLs,
                 ));
       case '/song-player':
-        final song = routeSettings.arguments as SongEntity;
+        final args = routeSettings.arguments as Map<String, dynamic>;
+        final songs = args['songs'] as List<SongEntity>;
+        final index = args['index'] as int;
         return MaterialPageRoute(
             builder: (_) => SongPlayer(
-                  song: song,
+                  songs: songs,
+                  index: index,
                 ));
       default:
         return null;

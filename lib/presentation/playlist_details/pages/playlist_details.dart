@@ -13,8 +13,8 @@ class PlaylistDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BasicAppBar(
-        title: const Text('Playlist Details'),
+      appBar: const BasicAppBar(
+        title: Text('Playlist Details'),
       ),
       body: BlocProvider(
         create: (context) =>
@@ -32,7 +32,7 @@ class PlaylistDetailsPage extends StatelessWidget {
                 child: Text(state.message),
               );
             } else {
-              return Center(
+              return const Center(
                 child: Text(' Something went wrong'),
               );
             }
@@ -46,13 +46,19 @@ class PlaylistDetailsPage extends StatelessWidget {
       shrinkWrap: true,
       physics: const BouncingScrollPhysics(),
       itemBuilder: ((context, index) {
-        return ListTile(
-          tileColor: Colors.transparent,
-          selected: false,
-          leading: Image.network(songs[index].coverURL),
-          title: Text(songs[index].title),
-          subtitle: Text(songs[index].artist,overflow: TextOverflow.ellipsis,),
-        
+        return GestureDetector(
+          onTap: () => Navigator.pushNamed(context, '/song-player', arguments: {
+            'songs': songs,
+            'index': index,
+          }),
+          child: ListTile(
+            tileColor: Colors.transparent,
+            selected: false,
+            leading: Image.network(songs[index].coverURL),
+            title: Text(songs[index].title),
+            subtitle: Text(songs[index].artist,overflow: TextOverflow.ellipsis,),
+          
+          ),
         );
       }),
       separatorBuilder: (context, index) => const Divider(),

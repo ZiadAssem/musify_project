@@ -52,8 +52,11 @@ Widget _songs(context, List<SongEntity> songs) {
         itemCount: songs.length,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () => Navigator.pushNamed(context, '/song-player',
-                arguments: songs[index]),
+            onTap: () =>
+                Navigator.pushNamed(context, '/song-player', arguments: {
+              'songs': songs,
+              'index': index,
+            }),
             child: SizedBox(
               width: 160,
               child: Padding(

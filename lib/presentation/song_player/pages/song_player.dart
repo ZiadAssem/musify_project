@@ -8,8 +8,9 @@ import 'package:spotify_project/presentation/song_player/bloc/cubit/song_player_
 import '../../../core/configs/theme/app_colors.dart';
 
 class SongPlayer extends StatelessWidget {
-  final SongEntity song;
-  const SongPlayer({super.key, required this.song});
+  final List<SongEntity> songs;
+  final int index;
+  const SongPlayer({super.key, required this.songs, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +25,12 @@ class SongPlayer extends StatelessWidget {
         ],
       ),
       body: BlocProvider(
-        create: (context) => SongPlayerCubit()..loadSong(song.songURL),
+        create: (context) => SongPlayerCubit()..loadSong(songs[index].songURL),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              _songCover(context, song),
-              _songInfo(song),
+              _songCover(context, songs[index]),
+              _songInfo(songs[index]),
               _songPlayer(),
             ],
           ),

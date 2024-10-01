@@ -50,8 +50,12 @@ Widget _songs(List<SongEntity> songs) {
           leading: PlayButtonIcon(
               dimensions: 50,
               iconSize: 35,
-              onPressed: () => Navigator.pushNamed(context, '/song-player',
-                  arguments: songs[index])),
+              onPressed: () => Navigator.pushNamed(
+                context, '/song-player',
+                  arguments: {
+                    'songs': songs,
+                    'index': index,
+                  })),
           title: Text(songs[index].title),
           subtitle: Text(songs[index].artist),
           trailing: SizedBox(
@@ -84,4 +88,3 @@ Widget _songs(List<SongEntity> songs) {
       separatorBuilder: (context, index) => const Divider(),
       itemCount: songs.length);
 }
-
