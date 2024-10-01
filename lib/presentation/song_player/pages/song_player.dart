@@ -10,13 +10,14 @@ import '../../../core/configs/theme/app_colors.dart';
 class SongPlayer extends StatelessWidget {
   final List<SongEntity> songs;
   final int index;
+
   const SongPlayer({super.key, required this.songs, required this.index});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BasicAppBar(
-        title: const Text(' Now Playing'),
+        title: const Text('Now Playing'),
         actions: [
           IconButton(
             icon: const Icon(Icons.more_vert_rounded),
@@ -25,13 +26,30 @@ class SongPlayer extends StatelessWidget {
         ],
       ),
       body: BlocProvider(
-        create: (context) => SongPlayerCubit()..loadSong(songs[index].songURL),
+        create: (context) => SongPlayerCubit()..loadSongs(songs, index),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              _songCover(context, songs[index]),
-              _songInfo(songs[index]),
-              _songPlayer(),
+              BlocBuilder<SongPlayerCubit, SongPlayerState>(
+                builder: (context, state) {
+                  final cubit = context.read<SongPlayerCubit>();
+                  if (state is SongPlayerLoading) {
+                    return const CircularProgressIndicator();
+                  } else if (state is SongPlayerLoaded) {
+                    return Column(
+                      children: [
+                        _songCover(context, cubit.songs[cubit.currentIndex]),
+                        _songInfo(cubit.songs[cubit.currentIndex]),
+                        _seekBar(context),
+                      ],
+                    );
+                  } else if (state is SongPlayerLoadFailure) {
+                    return Text(state.message);
+                  } else {
+                    return const Text('Something went wrong');
+                  }
+                },
+              ),
             ],
           ),
         ),
@@ -47,10 +65,7 @@ class SongPlayer extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           image: DecorationImage(
-              image: NetworkImage(
-                song.coverURL,
-              ),
-              fit: BoxFit.cover),
+              image: NetworkImage(song.coverURL), fit: BoxFit.cover),
         ),
       ),
     );
@@ -76,62 +91,49 @@ class SongPlayer extends StatelessWidget {
         ],
       ),
       trailing: FavoriteButton(song: song),
-      contentPadding:
-          const EdgeInsets.all(16), // Padding for the ListTile itself
+      contentPadding: const EdgeInsets.all(16),
     );
   }
 
-  Widget _songPlayer() {
+  Widget _seekBar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: BlocBuilder<SongPlayerCubit, SongPlayerState>(
         builder: (context, state) {
-          if (state is SongPlayerLoading) {
-            return const CircularProgressIndicator();
-          } else if (state is SongPlayerLoaded) {
-            return _seekBar(context);
-          } else if (state is SongPlayerLoadFailure) {
-            return Text(state.message);
-          } else {
-            return const Text('Something went wrong');
-          }
+          final cubit = context.read<SongPlayerCubit>();
+          return Column(
+            children: [
+              Slider(
+                value: cubit.songPosition.inSeconds.toDouble(),
+                min: 0,
+                max: cubit.songDuration.inSeconds.toDouble(),
+                onChanged: (value) {
+                  cubit.seekSong(Duration(seconds: value.toInt()));
+                },
+                activeColor: AppColors.primary,
+                inactiveColor: AppColors.grey,
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(formatDuration(cubit.songPosition)),
+                  Text(formatDuration(cubit.songDuration)),
+                ],
+              ),
+              const SizedBox(height: 8),
+              _songNavigationButtons(context)
+            ],
+          );
         },
       ),
     );
   }
 
-  Widget _seekBar(BuildContext context) {
-    return Column(
-      children: [
-        Slider(
-          value:
-              context.read<SongPlayerCubit>().songPosition.inSeconds.toDouble(),
-          min: 0,
-          max:
-              context.read<SongPlayerCubit>().songDuration.inSeconds.toDouble(),
-          onChanged: (value) {
-            context.read<SongPlayerCubit>().seekSong(Duration(seconds: value.toInt()));
-          },
-          activeColor: AppColors.primary,
-          inactiveColor: AppColors.grey,
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(formatDuration(context.read<SongPlayerCubit>().songPosition)),
-            Text(formatDuration(context.read<SongPlayerCubit>().songDuration)),
-          ],
-        ),
-        const SizedBox(height: 8),
-        _playOrPauseButton(context),
-      ],
-    );
-  }
-
   Widget _playOrPauseButton(BuildContext context) {
+    final cubit = context.read<SongPlayerCubit>();
     return GestureDetector(
-      onTap: () => context.read<SongPlayerCubit>().playOrPauseSong(),
+      onTap: () => cubit.playOrPauseSong(),
       child: Container(
         height: 60,
         width: 60,
@@ -139,10 +141,28 @@ class SongPlayer extends StatelessWidget {
           color: AppColors.primary,
           shape: BoxShape.circle,
         ),
-        child: context.read<SongPlayerCubit>().audioPlayer.playing
+        child: cubit.audioPlayer.playing
             ? const Icon(Icons.pause)
             : const Icon(Icons.play_arrow),
       ),
+    );
+  }
+
+  Widget _songNavigationButtons(BuildContext context) {
+    final cubit = context.read<SongPlayerCubit>();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.skip_previous),
+          onPressed: cubit.previousSong,
+        ),
+        _playOrPauseButton(context),
+        IconButton(
+          icon: const Icon(Icons.skip_next),
+          onPressed: cubit.nextSong,
+        ),
+      ],
     );
   }
 
