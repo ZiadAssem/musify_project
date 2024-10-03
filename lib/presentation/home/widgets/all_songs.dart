@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_project/common/bloc/favorite_button/favorite_button_cubit.dart';
+import 'package:spotify_project/common/helpers/is_dark_mode.dart';
 import 'package:spotify_project/common/widgets/favorite_button.dart/favorite_button.dart';
 import 'package:spotify_project/domain/entities/song/song.dart';
 import 'package:spotify_project/presentation/home/widgets/play_button.dart';
 
 import '../../../common/bloc/favorite_button/favorite_butoon_state.dart';
+import '../../../core/configs/theme/app_colors.dart';
 import '../bloc/all_songs_cubit.dart';
 import '../bloc/all_songs_state.dart';
 
@@ -23,7 +25,12 @@ class AllSongs extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           } else if (state is AllSongsLoaded) {
-            return _songs(state.songs);
+            return Column(
+              children: [
+                _topRow(context),
+                _songs(state.songs),
+              ],
+            );
           } else if (state is AllSongsLoadFailure) {
             return Center(
               child: Text(state.message),
@@ -39,6 +46,22 @@ class AllSongs extends StatelessWidget {
   }
 }
 
+Widget _topRow(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'All Songs',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        _sortPopUpMenu(context),
+      ],
+    ),
+  );
+}
+
 Widget _songs(List<SongEntity> songs) {
   return ListView.separated(
       shrinkWrap: true,
@@ -50,9 +73,8 @@ Widget _songs(List<SongEntity> songs) {
           leading: PlayButtonIcon(
               dimensions: 50,
               iconSize: 35,
-              onPressed: () => Navigator.pushNamed(
-                context, '/song-player',
-                  arguments: {
+              onPressed: () =>
+                  Navigator.pushNamed(context, '/song-player', arguments: {
                     'songs': songs,
                     'index': index,
                   })),
@@ -87,4 +109,32 @@ Widget _songs(List<SongEntity> songs) {
       }),
       separatorBuilder: (context, index) => const Divider(),
       itemCount: songs.length);
+}
+
+Widget _sortPopUpMenu(BuildContext context) {
+  return PopupMenuButton<String>(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20),
+    ),
+    color: context.isDarkMode ? AppColors.darkGrey : Colors.white,
+    onSelected: (String sortOption) {
+      _sortSongs(context, sortOption);
+    },
+    itemBuilder: (BuildContext context) {
+      return [
+        const PopupMenuItem(value: 'Name', child: Text('Name')),
+        const PopupMenuItem(value: 'Artist', child: Text('Artist')),
+        const PopupMenuItem(value: 'Release Date', child: Text('Release Date')),
+      ];
+    },
+    child: const Text(
+      'Sort by',
+      style: TextStyle(color: AppColors.primary),
+    ),
+  );
+}
+
+void _sortSongs(BuildContext context, String sortOption) {
+  final cubit = context.read<AllSongsCubit>();
+  cubit.sortSongsBy(sortOption);
 }

@@ -7,7 +7,7 @@ import '../../../domain/usecases/song/get_playlist_songs.dart';
 class PlaylistDetailsCubit extends Cubit<PlaylistDetailsState>{
   PlaylistDetailsCubit() : super( PlaylistDetailsLoading());
 
-  void fetchPlaylistDetails(List<String> songURLs) async {
+  void fetchPlaylistDetails(List<String>? songURLs) async {
     var playlistSongs = await sl<GetPlaylistSongsUseCase>().call(params: songURLs);
     playlistSongs.fold((l) {
       emit(PlaylistDetailsLoadFailure(message: l.toString()));

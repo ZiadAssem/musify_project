@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:spotify_project/core/configs/theme/app_theme.dart';
 import 'package:spotify_project/firebase_options.dart';
 import 'package:spotify_project/core/router/app_router.dart';
+import 'package:spotify_project/presentation/splash/bloc/auth_cubit.dart';
 import 'package:spotify_project/presentation/splash/pages/splash.dart';
 import 'package:spotify_project/service_locater.dart';
 
@@ -20,9 +21,8 @@ Future<void> main() async {
       ? HydratedStorage.webStorageDirectory
       : await getApplicationDocumentsDirectory();
 
-  HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: storageDirectory,
-  );
+  HydratedBloc.storage =
+      await HydratedStorage.build(storageDirectory: storageDirectory);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initializeDependencies();
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,6 +43,7 @@ class MainApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => ThemeCubit()),
+        BlocProvider(create: (_)=> AuthCubit()..checkSignedInUser())
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, mode) => MaterialApp(

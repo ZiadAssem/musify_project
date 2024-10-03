@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotify_project/domain/entities/playlist/playlist.dart';
 import 'package:spotify_project/domain/entities/song/song.dart';
 import 'package:spotify_project/presentation/auth/pages/signin_page.dart';
 import 'package:spotify_project/presentation/auth/pages/signup.dart';
@@ -32,10 +33,10 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const PlaylistsListPage());
 
       case '/playlist-details':
-        final List<String> songURLs = routeSettings.arguments as List<String>;
+        final PlaylistEntity playlist = routeSettings.arguments as PlaylistEntity;
         return MaterialPageRoute(
             builder: (_) => PlaylistDetailsPage(
-                  songURLs: songURLs,
+                  playlist: playlist,
                 ));
       case '/song-player':
         final args = routeSettings.arguments as Map<String, dynamic>;

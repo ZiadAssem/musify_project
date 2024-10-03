@@ -1,5 +1,4 @@
 import 'package:spotify_project/domain/entities/playlist/playlist.dart';
-import 'package:spotify_project/domain/entities/song/song.dart';
 
 abstract class PlaylistsState {
 }

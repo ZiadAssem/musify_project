@@ -41,7 +41,7 @@ class ProfilePage extends StatelessWidget {
                   _profileInfo(context),
                   const SizedBox(height: 25),
                   SizedBox(
-                    height: 70,
+                    height: 75,
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: _buttonList(context),
                   ),

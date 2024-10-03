@@ -12,10 +12,15 @@ abstract class AuthFirebaseService {
 
   Future<Either> signin(SigninUserRequest signinUserRequest);
 
+  Future<Either> signout();
+
   Future<Either> getUser();
+
+  Either checkSignedInUser();
 }
 
 class AuthFirebaseServiceImpl extends AuthFirebaseService {
+  
   @override
   Future<Either> signin(SigninUserRequest signinUserRequest) async {
     print('test: abstract into AuthFirebaseServiceImpl: signin: ');
@@ -80,6 +85,30 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
       return Right(userEntity);
     } on Exception catch (_) {
       return const Left('An error occurred while fetching user data');
+    }
+  }
+  
+  @override
+  Future<Either> signout() async{
+    try {
+      await FirebaseAuth.instance.signOut();
+      return const Right('Sign out was successful');
+    } catch (e) {
+      return Left('An error occurred while signing out');
+    }
+  }
+  
+  @override
+  Either checkSignedInUser() {
+    try {
+      final currentUser =  FirebaseAuth.instance.currentUser;
+      if (currentUser != null) {
+        return  Right(currentUser);
+      } else {
+        return Left('User is not signed in');
+      }
+    } catch (e) {
+      return Left('An error occurred while checking user sign in status');
     }
   }
 }

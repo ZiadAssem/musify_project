@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:spotify_project/common/helpers/is_dark_mode.dart';
 import 'package:spotify_project/common/widgets/appbar/app_bar.dart';
@@ -9,7 +8,6 @@ import 'package:spotify_project/presentation/home/widgets/new_songs.dart';
 import 'package:spotify_project/presentation/home/widgets/all_songs.dart';
 
 import '../../../core/configs/theme/app_colors.dart';
-import '../bloc/all_songs_cubit.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key});
@@ -26,7 +24,7 @@ class _HomePageState extends State<HomePage>
   void initState() {
     super.initState();
 
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -36,10 +34,8 @@ class _HomePageState extends State<HomePage>
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
-            onPressed: () =>
-                Navigator.pushReplacementNamed(context, '/profile').then((result) {
-             
-            }),
+            onPressed: () => Navigator.pushReplacementNamed(context, '/profile')
+                .then((result) {}),
           ),
         ],
         hideBackButton: true,
@@ -57,36 +53,19 @@ class _HomePageState extends State<HomePage>
           Expanded(
             child: TabBarView(controller: _tabController, children: [
               SingleChildScrollView(
-
                 physics: BouncingScrollPhysics(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 250, child: NewSongs()),
-                     Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'All Songs',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      _sortPopUpMenu(context),
-                    ],
-                  ),
-                ),
+                    const SizedBox(height: 260, child: NewSongs()),
                     SizedBox(
                         height: MediaQuery.of(context).size.height -
                             kToolbarHeight -
-                            250,
+                            290,
                         child: const AllSongs()),
                   ],
                 ),
               ),
-              Container(),
-              Container(),
               Container(),
             ]),
           )
@@ -125,50 +104,18 @@ class _HomePageState extends State<HomePage>
       ),
       child: TabBar(
           controller: _tabController,
+          indicator: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            color: AppColors.darkGrey.withOpacity(0.5),
+          ),
           isScrollable: true,
           labelColor: context.isDarkMode ? Colors.white : Colors.black,
           tabs: const [
-            Tab(
-              text: 'New Songs',
-            ),
-            Tab(text: 'Playlists'),
-            Tab(text: 'Artists'),
+            Tab(text: 'New Songs'),
             Tab(text: 'Podcasts'),
           ]),
     );
   }
-Widget _sortPopUpMenu(context) {
-  return PopupMenuButton<String>(
-    onSelected: (String sortOption) {
-      _sortSongs(context, sortOption);
-    },
-    itemBuilder: (BuildContext context) {
-      return [
-        const PopupMenuItem(
-          value: 'Name',
-          child: Text('Sort by Name'),
-        ),
-        const PopupMenuItem(
-          value: 'Artist',
-          child: Text('Sort by Artist'),
-        ),
-        const PopupMenuItem(
-          value: 'Release Date',
-          child: Text('Sort by Release Date'),
-        ),
-      ];
-    },
-    child: const Text(
-      'Sort by',
-      style: TextStyle(color: AppColors.primary),
-    ),
-  );
-}
-
-void _sortSongs(BuildContext context, String sortOption) {
-  final cubit = context.read<AllSongsCubit>();
-  cubit.sortSongsBy(sortOption);
-}
 
   @override
   void dispose() {

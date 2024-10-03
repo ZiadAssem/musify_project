@@ -49,7 +49,7 @@ class PlaylistsListPage extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               Navigator.pushNamed(context, '/playlist-details',
-                  arguments: playlists[index].songURLs);
+                  arguments: playlists[index]);
               },
             child: ListTile(
               tileColor: Colors.transparent,

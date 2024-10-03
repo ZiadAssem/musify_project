@@ -3,7 +3,9 @@ import 'package:spotify_project/data/repository/playlist/playlist_repository_imp
 import 'package:spotify_project/data/repository/song/song_repository_impl.dart';
 import 'package:spotify_project/data/sources/song/song_firestore_service.dart';
 import 'package:spotify_project/domain/repository/song/song.dart';
+import 'package:spotify_project/domain/usecases/auth/check_signed_in.dart';
 import 'package:spotify_project/domain/usecases/auth/get_user.dart';
+import 'package:spotify_project/domain/usecases/auth/signout.dart';
 import 'package:spotify_project/domain/usecases/auth/signup.dart';
 import 'package:spotify_project/domain/usecases/song/add_or_remove_favorite.dart';
 import 'package:spotify_project/domain/usecases/song/get_favorite_songs.dart';
@@ -23,10 +25,18 @@ import 'domain/usecases/playlist/get_all_playlists.dart';
 final sl = GetIt.instance;
 
 Future<void> initializeDependencies() async {
+
+  // Firebase Services
   sl.registerSingleton<AuthFirebaseService>(AuthFirebaseServiceImpl());
-  sl.registerSingleton<AuthRepository>(AuthRepositoryImpl());
   sl.registerSingleton<SongFirebaseService>(SongFirebaseServiceImpl());
+  sl.registerSingleton<PlaylistFirebaseService>(PlaylistFirebaseServiceImpl());
+
+  // Repositories
+  sl.registerSingleton<AuthRepository>(AuthRepositoryImpl());
   sl.registerSingleton<SongsRepository>(SongsRepositoryImpl());
+  sl.registerSingleton<PlaylistRepository>(PlaylistRepositoryImpl());
+
+  // UseCases
   sl.registerSingleton<GetNewSongsUseCase>(GetNewSongsUseCase());
   sl.registerSingleton<SignupUseCase>(SignupUseCase());
   sl.registerSingleton<SigninUseCase>(SigninUseCase());
@@ -35,8 +45,8 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<IsFavoriteUseCase>(IsFavoriteUseCase());
   sl.registerSingleton<GetUserUseCase>(GetUserUseCase());
   sl.registerSingleton<GetFavoriteSongsUseCase>(GetFavoriteSongsUseCase());
-  sl.registerSingleton<PlaylistRepository>(PlaylistRepositoryImpl());
-  sl.registerSingleton<PlaylistFirebaseService>(PlaylistFirebaseServiceImpl());
   sl.registerSingleton<GetAllPlaylistsUseCase>(GetAllPlaylistsUseCase());
   sl.registerSingleton<GetPlaylistSongsUseCase>(GetPlaylistSongsUseCase());
+  sl.registerSingleton<SignoutUseCase>(SignoutUseCase());
+  sl.registerSingleton<CheckSignedInUseCase>(CheckSignedInUseCase());
 }
