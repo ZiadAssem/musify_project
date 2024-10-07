@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:spotify_project/common/bloc/favorite_button/favorite_button_cubit.dart';
 import 'package:spotify_project/common/helpers/is_dark_mode.dart';
 import 'package:spotify_project/common/widgets/favorite_button.dart/favorite_button.dart';
@@ -12,7 +14,36 @@ import '../bloc/all_songs_cubit.dart';
 import '../bloc/all_songs_state.dart';
 
 class AllSongs extends StatelessWidget {
-  const AllSongs({super.key});
+  AllSongs({super.key});
+ final List<SongEntity> fakeSongs = [
+    SongEntity(
+        title: 'title for song',
+        artist: 'artist for',
+        duration: 1,
+        releaseDate: Timestamp.now(),
+        coverURL: 'coverURL',
+        songURL: 'songURL',
+        isFavorite: false,
+        songId: 'songId'),
+    SongEntity(
+        title: 'title for song',
+        artist: 'artist for',
+        duration: 1,
+        releaseDate: Timestamp.now(),
+        coverURL: 'coverURL',
+        songURL: 'songURL',
+        isFavorite: false,
+        songId: 'songId'),
+    SongEntity(
+        title: 'title for song',
+        artist: 'artist for',
+        duration: 1,
+        releaseDate: Timestamp.now(),
+        coverURL: 'coverURL',
+        songURL: 'songURL',
+        isFavorite: false,
+        songId: 'songId'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +51,15 @@ class AllSongs extends StatelessWidget {
       create: (_) => AllSongsCubit()..getAllSongs(),
       child: BlocBuilder<AllSongsCubit, AllSongsState>(
         builder: (context, state) {
-          if (state == const AllSongsLoading()) {
-            return const Center(
-              child: CircularProgressIndicator(),
+          if (state is AllSongsLoading) {
+            return Skeletonizer(
+              enabled: true,
+              child: Column(
+                children: [
+                  _topRow(context),
+                  _songs(fakeSongs),
+                ],
+              ),
             );
           } else if (state is AllSongsLoaded) {
             return Column(
@@ -82,27 +119,30 @@ Widget _songs(List<SongEntity> songs) {
           subtitle: Text(songs[index].artist),
           trailing: SizedBox(
             width: 100,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(songs[index].duration.toString().replaceAll('.', ':')),
-                BlocProvider(
-                  create: (context) => FavoriteButtonCubit(),
-                  child: BlocBuilder<FavoriteButtonCubit, FavoriteButtonState>(
-                    builder: (context, state) {
-                      if (state is FavoriteButtonInitial) {
-                        return FavoriteButton(song: songs[index]);
-                      } else if (state is FavoriteButtonUpdated) {
-                        return FavoriteButton(song: songs[index]);
-                      } else {
-                        return const Center(
-                          child: Text('Something went wrong'),
-                        );
-                      }
-                    },
+            child: Skeleton.unite(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(songs[index].duration.toString().replaceAll('.', ':')),
+                  BlocProvider(
+                    create: (context) => FavoriteButtonCubit(),
+                    child:
+                        BlocBuilder<FavoriteButtonCubit, FavoriteButtonState>(
+                      builder: (context, state) {
+                        if (state is FavoriteButtonInitial) {
+                          return FavoriteButton(song: songs[index]);
+                        } else if (state is FavoriteButtonUpdated) {
+                          return FavoriteButton(song: songs[index]);
+                        } else {
+                          return const Center(
+                            child: Text('Something went wrong'),
+                          );
+                        }
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

@@ -124,20 +124,67 @@ class PlaylistDetailsPage extends StatelessWidget {
             'songs': songs,
             'index': index,
           }),
-          child: ListTile(
-            tileColor: Colors.transparent,
-            selected: false,
-            leading: Image.network(songs[index].coverURL),
-            title: Text(songs[index].title),
-            subtitle: Text(
-              songs[index].artist,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
+          child: GestureDetector(
+            onTap: () => Navigator.pushNamed(context, '/song-player', arguments: {
+              'songs': songs,
+              'index': index,
+            }),
+            child: _songTile(context, songs[index]))
         );
       }),
       separatorBuilder: (context, index) => const Divider(),
       itemCount: songs.length,
     );
   }
+
+    Widget _songTile(BuildContext context,SongEntity song) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 70,
+                height: 70,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  image: DecorationImage(
+                      image: NetworkImage(song.coverURL)),
+                ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width:
+                        MediaQuery.of(context).size.width * 0.3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      song.title,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      song.artist,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Text(song.duration.toString().replaceAll('.', ':')),
+        ],
+      ),
+    );
+  }
+
 }

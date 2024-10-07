@@ -208,7 +208,6 @@ class ProfilePage extends StatelessWidget {
                   ? const Text('You Have No Favorite Songs')
                   : SizedBox(
                       // check if portrait or landscape
-
                       height: MediaQuery.of(context).orientation ==
                               Orientation.portrait
                           ? MediaQuery.of(context).size.height * 0.5

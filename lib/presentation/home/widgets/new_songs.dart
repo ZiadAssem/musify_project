@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:spotify_project/core/configs/theme/app_colors.dart';
 import 'package:spotify_project/presentation/home/widgets/play_button.dart';
 
 import '../../../domain/entities/song/song.dart';
@@ -7,7 +10,37 @@ import '../bloc/new_songs_cubit.dart';
 import '../bloc/new_songs_state.dart';
 
 class NewSongs extends StatelessWidget {
-  const NewSongs({super.key});
+   NewSongs({super.key});
+   final List<SongEntity> fakeSongs = [
+    SongEntity(
+        title: 'title for song',
+        artist: 'artist for',
+        duration: 1,
+        releaseDate: Timestamp.now(),
+        coverURL: 'coverURL',
+        songURL: 'songURL',
+        isFavorite: false,
+        songId: 'songId'),
+    SongEntity(
+        title: 'title for song',
+        artist: 'artist for',
+        duration: 1,
+        releaseDate: Timestamp.now(),
+        coverURL: 'coverURL',
+        songURL: 'songURL',
+        isFavorite: false,
+        songId: 'songId'),
+    SongEntity(
+        title: 'title for song',
+        artist: 'artist for',
+        duration: 1,
+        releaseDate: Timestamp.now(),
+        coverURL: 'coverURL',
+        songURL: 'songURL',
+        isFavorite: false,
+        songId: 'songId'),
+  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +49,10 @@ class NewSongs extends StatelessWidget {
       child: BlocBuilder<NewSongsCubit, NewSongsState>(
         builder: (context, state) {
           if (state is NewSongsLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return Skeletonizer(child: _songs(context, fakeSongs,state));
           } else if (state is NewSongsLoaded) {
             print('SONGS: ${state.songs}');
-            return _songs(context, state.songs);
+            return _songs(context, state.songs,state);
           } else if (state is NewSongsLoadFailure) {
             return Center(
               child: Text(state.message),
@@ -37,7 +68,7 @@ class NewSongs extends StatelessWidget {
   }
 }
 
-Widget _songs(context, List<SongEntity> songs) {
+Widget _songs(context, List<SongEntity> songs,state) {
   return Padding(
     padding: const EdgeInsets.only(
       top: 16.0,
@@ -66,7 +97,18 @@ Widget _songs(context, List<SongEntity> songs) {
                   children: [
                     SizedBox(
                       height: 160,
-                      child: Container(
+                      child: 
+                      state is NewSongsLoading ?
+                      Skeletonizer(
+                        enabled: true,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: AppColors.darkGrey,
+                          ),
+                        ),
+                      ) :
+                      Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
                           image: DecorationImage(

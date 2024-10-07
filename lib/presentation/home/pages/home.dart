@@ -47,6 +47,7 @@ class _HomePageState extends State<HomePage>
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _homeTopCard(),
           _tabs(),
@@ -57,16 +58,16 @@ class _HomePageState extends State<HomePage>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 260, child: NewSongs()),
+                     SizedBox(height: 260, child: NewSongs()),
                     SizedBox(
                         height: MediaQuery.of(context).size.height -
                             kToolbarHeight -
                             290,
-                        child: const AllSongs()),
+                        child:  AllSongs()),
                   ],
                 ),
               ),
-              Container(),
+              Center(child: Text("Coming Soon")),
             ]),
           )
         ],
@@ -103,6 +104,9 @@ class _HomePageState extends State<HomePage>
         top: 16.0,
       ),
       child: TabBar(
+          padding: EdgeInsets.all(8),
+          indicatorSize: TabBarIndicatorSize.tab,
+          tabAlignment: TabAlignment.center,
           controller: _tabController,
           indicator: BoxDecoration(
             borderRadius: BorderRadius.circular(50),
