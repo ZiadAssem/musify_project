@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:spotify_project/common/bloc/favorite_button/favorite_button_cubit.dart';
 import 'package:spotify_project/common/helpers/is_dark_mode.dart';
+import 'package:spotify_project/common/loading_dummy/loading_dummy.dart';
 import 'package:spotify_project/common/widgets/favorite_button.dart/favorite_button.dart';
 import 'package:spotify_project/domain/entities/song/song.dart';
 import 'package:spotify_project/presentation/home/widgets/play_button.dart';
@@ -15,35 +15,6 @@ import '../bloc/all_songs_state.dart';
 
 class AllSongs extends StatelessWidget {
   AllSongs({super.key});
- final List<SongEntity> fakeSongs = [
-    SongEntity(
-        title: 'title for song',
-        artist: 'artist for',
-        duration: 1,
-        releaseDate: Timestamp.now(),
-        coverURL: 'coverURL',
-        songURL: 'songURL',
-        isFavorite: false,
-        songId: 'songId'),
-    SongEntity(
-        title: 'title for song',
-        artist: 'artist for',
-        duration: 1,
-        releaseDate: Timestamp.now(),
-        coverURL: 'coverURL',
-        songURL: 'songURL',
-        isFavorite: false,
-        songId: 'songId'),
-    SongEntity(
-        title: 'title for song',
-        artist: 'artist for',
-        duration: 1,
-        releaseDate: Timestamp.now(),
-        coverURL: 'coverURL',
-        songURL: 'songURL',
-        isFavorite: false,
-        songId: 'songId'),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +28,7 @@ class AllSongs extends StatelessWidget {
               child: Column(
                 children: [
                   _topRow(context),
-                  _songs(fakeSongs),
+                  _songs(LoadingDummy.dummySongs),
                 ],
               ),
             );

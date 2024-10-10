@@ -30,7 +30,7 @@ class AppRouter {
       case '/profile':
         return MaterialPageRoute(builder: (_) => const ProfilePage());
       case '/playlists':
-        return MaterialPageRoute(builder: (_) => const PlaylistsListPage());
+        return MaterialPageRoute(builder: (_) =>  PlaylistsListPage());
 
       case '/playlist-details':
         final PlaylistEntity playlist = routeSettings.arguments as PlaylistEntity;

@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spotify_project/domain/entities/playlist/playlist.dart';
 
+import '../../../domain/usecases/playlist/create_new_playlist.dart';
 import '../../../domain/usecases/playlist/get_all_playlists.dart';
 import '../../../service_locater.dart';
 import 'playlists_state.dart';
@@ -16,4 +18,5 @@ class PlaylistsCubit extends Cubit<PlaylistsState> {
       (playlists) => emit(PlaylistsLoaded(playlists: playlists)),
     );
   }
+
 }

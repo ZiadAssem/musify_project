@@ -17,6 +17,15 @@ class PlaylistModel{
     );
   }
 
+  factory PlaylistModel.fromEntity(PlaylistEntity entity) {
+    return PlaylistModel(
+      entity.title,
+      entity.description,
+      entity.imageURL,
+      entity.songURLs,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'title': title,
@@ -25,7 +34,7 @@ class PlaylistModel{
       'songURLs': songURLs,
     };
   }
-
+   
  
 
 }

@@ -7,6 +7,7 @@ import '../../models/playlist/playlist.dart';
 
 abstract class PlaylistFirebaseService{
   Future<Either> getAllPlaylists();
+  Future<Either> createNewPlaylist(PlaylistModel playlist);
 }
 
 class PlaylistFirebaseServiceImpl implements PlaylistFirebaseService{
@@ -31,5 +32,18 @@ class PlaylistFirebaseServiceImpl implements PlaylistFirebaseService{
     }catch(e){
       return Left(e);
     }
+  }
+  
+  @override
+  Future<Either> createNewPlaylist(PlaylistModel model) async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    try{
+      await firestore.collection('Users').doc(userId).collection('Playlists').add(model.toJson());
+      return Right('Playlist created successfully');
+    }catch(e){
+      return Left(e);
+    }
+    
   }
 }

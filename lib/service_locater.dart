@@ -7,6 +7,7 @@ import 'package:spotify_project/domain/usecases/auth/check_signed_in.dart';
 import 'package:spotify_project/domain/usecases/auth/get_user.dart';
 import 'package:spotify_project/domain/usecases/auth/signout.dart';
 import 'package:spotify_project/domain/usecases/auth/signup.dart';
+import 'package:spotify_project/domain/usecases/playlist/create_new_playlist.dart';
 import 'package:spotify_project/domain/usecases/song/add_or_remove_favorite.dart';
 import 'package:spotify_project/domain/usecases/song/get_favorite_songs.dart';
 import 'package:spotify_project/domain/usecases/song/get_new_songs.dart';
@@ -49,4 +50,5 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<GetPlaylistSongsUseCase>(GetPlaylistSongsUseCase());
   sl.registerSingleton<SignoutUseCase>(SignoutUseCase());
   sl.registerSingleton<CheckSignedInUseCase>(CheckSignedInUseCase());
+  sl.registerSingleton<CreateNewPlaylistUseCase>(CreateNewPlaylistUseCase());
 }

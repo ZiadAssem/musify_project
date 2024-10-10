@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:spotify_project/common/loading_dummy/loading_dummy.dart';
 import 'package:spotify_project/core/configs/theme/app_colors.dart';
 import 'package:spotify_project/presentation/home/widgets/play_button.dart';
 
@@ -10,36 +10,7 @@ import '../bloc/new_songs_cubit.dart';
 import '../bloc/new_songs_state.dart';
 
 class NewSongs extends StatelessWidget {
-   NewSongs({super.key});
-   final List<SongEntity> fakeSongs = [
-    SongEntity(
-        title: 'title for song',
-        artist: 'artist for',
-        duration: 1,
-        releaseDate: Timestamp.now(),
-        coverURL: 'coverURL',
-        songURL: 'songURL',
-        isFavorite: false,
-        songId: 'songId'),
-    SongEntity(
-        title: 'title for song',
-        artist: 'artist for',
-        duration: 1,
-        releaseDate: Timestamp.now(),
-        coverURL: 'coverURL',
-        songURL: 'songURL',
-        isFavorite: false,
-        songId: 'songId'),
-    SongEntity(
-        title: 'title for song',
-        artist: 'artist for',
-        duration: 1,
-        releaseDate: Timestamp.now(),
-        coverURL: 'coverURL',
-        songURL: 'songURL',
-        isFavorite: false,
-        songId: 'songId'),
-  ];
+   const NewSongs({super.key});
 
 
   @override
@@ -49,7 +20,7 @@ class NewSongs extends StatelessWidget {
       child: BlocBuilder<NewSongsCubit, NewSongsState>(
         builder: (context, state) {
           if (state is NewSongsLoading) {
-            return Skeletonizer(child: _songs(context, fakeSongs,state));
+            return Skeletonizer(child: _songs(context, LoadingDummy.dummySongs,state));
           } else if (state is NewSongsLoaded) {
             print('SONGS: ${state.songs}');
             return _songs(context, state.songs,state);
