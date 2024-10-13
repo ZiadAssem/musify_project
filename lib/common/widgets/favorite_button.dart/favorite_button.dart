@@ -19,7 +19,7 @@ class FavoriteButton extends StatelessWidget {
         builder: (context, state) {
           if (state is FavoriteButtonInitial) {
             return IconButton(
-              icon: song.isFavorite
+              icon: (song.isFavorite ?? false)
                   ? const Icon(Icons.favorite)
                   : const Icon(Icons.favorite_border),
               iconSize: 25,

@@ -44,7 +44,9 @@ class AllSongsCubit extends Cubit<AllSongsState> {
       final loadedState = state as AllSongsLoaded;
       final updatedSongs = loadedState.songs.map((s) {
         if (s.songId == song.songId) {
-          return song.copyWith(isFavorite: !s.isFavorite);
+          return song.copyWith(
+            isFavorite: s.isFavorite == null ? true : !s.isFavorite!
+          );
         }
         return s;
       }).toList();

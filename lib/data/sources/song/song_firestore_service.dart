@@ -15,6 +15,7 @@ abstract class SongFirebaseService {
   Future<Either> addOrRemoveToFavorites(String songId);
   Future<bool> isFavorite(String songId);
   Future<Either> getUserFavoriteSongs();
+  Future<Either> searchSongs(String query,{List<SongEntity>? playlistSongs});
 }
 
 class SongFirebaseServiceImpl implements SongFirebaseService {
@@ -81,7 +82,6 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
       var data = await firestore
           .collection('Songs')
           .orderBy('releaseDate', descending: true)
-        
           .get();
 
       for (var element in data.docs) {
@@ -121,14 +121,14 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
     try {
       List<SongEntity> playlistSongs = [];
 
-     for (var songURL in songURLs){
+      for (var songURL in songURLs) {
         playlistSongs.add(await _getSong(songURL, false));
-     }
+      }
 
       return Right(playlistSongs);
     } on Exception catch (e) {
       return Left('An error has occurred: $e');
-    }     
+    }
   }
 
   @override
@@ -236,7 +236,7 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
     songData['isFavorite'] = isFavorite;
     songData['songId'] = songID;
     var songModel = SongModel.fromJson(songData);
-    
+
     return songModel.toEntity();
   }
 
@@ -260,4 +260,33 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
 
     return coverURL;
   }
+
+  @override
+Future<Either> searchSongs(String query, {List<SongEntity>? playlistSongs}) async {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  List<SongEntity> songs = [];
+  List<SongEntity> existingSongs = playlistSongs ?? [];
+
+  try {
+    // Use .get() instead of .snapshots() for querying data once
+    final snapshot = await firestore
+        .collection('Songs')
+        .where('title', isGreaterThanOrEqualTo: query)
+        .where('title', isLessThanOrEqualTo: '$query\uf8ff')
+        .get(); // Query the data once, not as a stream
+
+    // Map the query snapshot to a list of SongEntity
+    songs = snapshot.docs
+        .map((doc) => SongModel.fromFirestore(doc).toEntity())
+        .toList();
+    print('Songs: $songs');
+
+    // Remove existing songs from the result
+    songs.removeWhere((song) => existingSongs.contains(song));
+  } on Exception catch (e) {
+    return Left('An error has occurred: $e');
+  }
+
+  return Right(songs);
+}
 }

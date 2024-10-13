@@ -14,6 +14,7 @@ import 'package:spotify_project/domain/usecases/song/get_new_songs.dart';
 import 'package:spotify_project/domain/usecases/song/get_all_songs.dart';
 import 'package:spotify_project/domain/usecases/song/get_playlist_songs.dart';
 import 'package:spotify_project/domain/usecases/song/is_favorite.dart';
+import 'package:spotify_project/domain/usecases/song/search_song.dart';
 
 import 'data/repository/auth/auth_repository_impl.dart';
 import 'data/sources/auth/auth_firebase_service.dart';
@@ -51,4 +52,5 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<SignoutUseCase>(SignoutUseCase());
   sl.registerSingleton<CheckSignedInUseCase>(CheckSignedInUseCase());
   sl.registerSingleton<CreateNewPlaylistUseCase>(CreateNewPlaylistUseCase());
+  sl.registerSingleton<SearchSongUseCase>(SearchSongUseCase());
 }

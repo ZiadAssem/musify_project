@@ -8,7 +8,7 @@ class SongModel {
   Timestamp releaseDate;
   String coverURL;
   String songURL;
-  bool isFavorite;
+  bool? isFavorite;
   String songId;
 
   SongModel(
@@ -18,7 +18,7 @@ class SongModel {
       required this.releaseDate,
       required this.coverURL,
       required this.songURL,
-      required this.isFavorite,
+      this.isFavorite,
       required this.songId});
 
   factory SongModel.fromJson(Map<String, dynamic> map) {
@@ -31,6 +31,18 @@ class SongModel {
         songURL: map['songURL'],
         isFavorite: map['isFavorite'],
         songId: map['songId']);
+  }
+
+  factory SongModel.fromFirestore(DocumentSnapshot doc){
+    return SongModel(
+        title: doc['title'],
+        artist: doc['artist'],
+        duration: doc['duration'],
+        releaseDate: doc['releaseDate'],
+        coverURL: doc['coverURL'],
+        songURL: doc['songURL'],
+        isFavorite: doc['isFavorite'],
+        songId: doc.id);
   }
 
   Map<String, dynamic> toJson() {

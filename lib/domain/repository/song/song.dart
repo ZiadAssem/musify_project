@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:spotify_project/domain/entities/song/song.dart';
 
 abstract class SongsRepository {
   Future<Either> getNewSongs(); 
@@ -7,5 +8,6 @@ abstract class SongsRepository {
   Future<bool> isFavorite(String songId);
   Future<Either> getUserFavoriteSongs();
   Future<Either> getPlaylistSongs(List<String> songURLs);
+  Future<Either> searchSongs(String query, {List<SongEntity>? songs});
 
 }
