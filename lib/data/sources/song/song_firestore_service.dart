@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:spotify_project/data/models/song/song.dart';
 
@@ -15,7 +16,8 @@ abstract class SongFirebaseService {
   Future<Either> addOrRemoveToFavorites(String songId);
   Future<bool> isFavorite(String songId);
   Future<Either> getUserFavoriteSongs();
-  Future<Either> searchSongs(String query,{List<SongEntity>? playlistSongs});
+  Future<Either> searchSongs(String query, {List<SongEntity>? playlistSongs});
+  Future<Either> addToPlaylist(String playlistId, List<String> songId);
 }
 
 class SongFirebaseServiceImpl implements SongFirebaseService {
@@ -262,31 +264,74 @@ class SongFirebaseServiceImpl implements SongFirebaseService {
   }
 
   @override
-Future<Either> searchSongs(String query, {List<SongEntity>? playlistSongs}) async {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  List<SongEntity> songs = [];
-  List<SongEntity> existingSongs = playlistSongs ?? [];
+  Future<Either> searchSongs(String query,
+      {List<SongEntity>? playlistSongs}) async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    List<SongEntity> songs = [];
+    List<SongEntity> existingSongs = playlistSongs ?? [];
+    print('QUERY $query');
+    try {
+      // Use .get() instead of .snapshots() for querying data once
+      final snapshot = await firestore
+          .collection('Songs')
+          .where('title', isGreaterThanOrEqualTo: query)
+          .where('title', isLessThanOrEqualTo: '$query\uf8ff')
+          .get(); // Query the data once, not as a stream
+      // Map the query snapshot to a list of SongEntity
 
-  try {
-    // Use .get() instead of .snapshots() for querying data once
-    final snapshot = await firestore
-        .collection('Songs')
-        .where('title', isGreaterThanOrEqualTo: query)
-        .where('title', isLessThanOrEqualTo: '$query\uf8ff')
-        .get(); // Query the data once, not as a stream
+      for(var doc in snapshot.docs){
+                var songData = doc.data();
+        var artist = songData['artist'];
+        var title = songData['title'];
+        var coverURL = '';
+        var songURL = '';
+        bool isFavorite = false;
+        var songId = doc.reference.id;
 
-    // Map the query snapshot to a list of SongEntity
-    songs = snapshot.docs
-        .map((doc) => SongModel.fromFirestore(doc).toEntity())
-        .toList();
-    print('Songs: $songs');
+        coverURL = await _getCoverDownloadURL(artist, title);
+        songURL = await _getSongDownloadURL(artist, title);
+        isFavorite =
+            await sl<IsFavoriteUseCase>().call(params: doc.reference.id);
 
-    // Remove existing songs from the result
-    songs.removeWhere((song) => existingSongs.contains(song));
-  } on Exception catch (e) {
-    return Left('An error has occurred: $e');
+        songData['coverURL'] = coverURL;
+        songData['songURL'] = songURL;
+        songData['isFavorite'] = isFavorite;
+        songData['songId'] = songId;
+        var songModel = SongModel.fromJson(songData);
+        SongEntity songEntity = songModel.toEntity();
+        songs.add(songEntity);
+
+      }
+
+      
+      // songs = snapshot.docs
+      //     .map((doc) => SongModel.fromFirestore(doc).toEntity())
+      //     .toList();
+
+      // Remove existing songs from the result
+      songs.removeWhere((song) => existingSongs.contains(song));
+    } on Exception catch (e) {
+      return Left('An error has occurred: $e');
+    }
+
+    return Right(songs);
   }
 
-  return Right(songs);
-}
+  @override
+  Future<Either> addToPlaylist(String playlistId, List<String> songId) async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final uId = FirebaseAuth.instance.currentUser!.uid;
+
+    try {
+      await firestore
+          .collection('Users')
+          .doc(uId)
+          .collection('Playlists')
+          .doc(playlistId)
+          .update({'songURLs': FieldValue.arrayUnion(songId)});
+      return Right('Songs added to playlist');
+    } on Exception catch (e) {
+      return Left('An error has occurred: $e');
+    }
+  }
 }

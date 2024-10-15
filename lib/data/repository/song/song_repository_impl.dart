@@ -40,4 +40,10 @@ class SongsRepositoryImpl extends SongsRepository{
   Future<Either> searchSongs(String query,{List<SongEntity>? songs}) async{
     return await sl<SongFirebaseService>().searchSongs(query,playlistSongs: songs);
   }
+  
+  @override
+  Future<Either> addToPlaylist(String playlistId, List<String> songId)async {
+     return await sl<SongFirebaseService>().addToPlaylist(playlistId, songId);
+
+  }
 }

@@ -9,5 +9,6 @@ abstract class SongsRepository {
   Future<Either> getUserFavoriteSongs();
   Future<Either> getPlaylistSongs(List<String> songURLs);
   Future<Either> searchSongs(String query, {List<SongEntity>? songs});
+  Future<Either> addToPlaylist(String playlistId, List< String> songId);
 
 }

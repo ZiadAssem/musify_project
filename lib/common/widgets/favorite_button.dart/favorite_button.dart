@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_project/core/configs/theme/app_colors.dart';
 
 import '../../../domain/entities/song/song.dart';
-import '../../bloc/favorite_button/favorite_butoon_state.dart';
+import '../../bloc/favorite_button/favorite_button_state.dart';
 import '../../bloc/favorite_button/favorite_button_cubit.dart';
 
 class FavoriteButton extends StatelessWidget {

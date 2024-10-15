@@ -14,13 +14,14 @@ class SearchCubit extends Cubit<SearchState> {
     emit(SearchLoading());
     final result = await sl<SongsRepository>().searchSongs(query);
     result.fold(
-      (failure) => emit(SearchFailure(message: failure.message)),
+      (failure) => emit(SearchFailure(message: failure.toString())),
       (songs) {
-        if (songs.isEmpty) {
-          emit(SearchNoResults());
-        } else {
-          emit(SearchLoaded(songs: songs));
-        }
+        // if (songs.isEmpty) {
+        //   emit(SearchNoResults());
+        // } else {
+        //   emit(SearchLoaded(songs: songs));
+        // }
+        emit(SearchLoaded(songs: songs));
       },
     );
   }

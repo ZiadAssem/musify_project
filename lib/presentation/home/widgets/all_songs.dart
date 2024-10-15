@@ -8,7 +8,7 @@ import 'package:spotify_project/common/widgets/favorite_button.dart/favorite_but
 import 'package:spotify_project/domain/entities/song/song.dart';
 import 'package:spotify_project/presentation/home/widgets/play_button.dart';
 
-import '../../../common/bloc/favorite_button/favorite_butoon_state.dart';
+import '../../../common/bloc/favorite_button/favorite_button_state.dart';
 import '../../../core/configs/theme/app_colors.dart';
 import '../bloc/all_songs_cubit.dart';
 import '../bloc/all_songs_state.dart';

@@ -7,6 +7,6 @@ import '../../repository/song/song.dart';
 class SearchSongUseCase extends UseCase<Either, Map<String,dynamic>> {
   @override
   Future<Either> call({params}) async {
-    return await sl<SongsRepository>().searchSongs(params!['query'],songs: params!['songs']);
+    return await sl<SongsRepository>().searchSongs(params!['query'],songs: params['songs']);
   }
 }

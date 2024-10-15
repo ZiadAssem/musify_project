@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spotify_project/common/bloc/favorite_button/favorite_butoon_state.dart';
+import 'package:spotify_project/common/bloc/favorite_button/favorite_button_state.dart';
 import 'package:spotify_project/domain/usecases/song/add_or_remove_favorite.dart';
 import 'package:spotify_project/service_locater.dart';
 
