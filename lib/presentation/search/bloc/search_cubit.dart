@@ -16,12 +16,11 @@ class SearchCubit extends Cubit<SearchState> {
     result.fold(
       (failure) => emit(SearchFailure(message: failure.toString())),
       (songs) {
-        // if (songs.isEmpty) {
-        //   emit(SearchNoResults());
-        // } else {
-        //   emit(SearchLoaded(songs: songs));
-        // }
-        emit(SearchLoaded(songs: songs));
+        if(songs.isEmpty){
+          emit(SearchNoResults());
+        }else{
+          emit(SearchLoaded(songs: songs));
+        }
       },
     );
   }

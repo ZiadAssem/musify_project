@@ -10,7 +10,7 @@ import 'package:spotify_project/presentation/home/widgets/all_songs.dart';
 import '../../../core/configs/theme/app_colors.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -31,13 +31,7 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BasicAppBar(
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () => Navigator.pushReplacementNamed(context, '/profile')
-                .then((result) {}),
-          ),
-        ],
+       
         hideBackButton: true,
         title: SvgPicture.asset(
           AppVectors.logo,

@@ -4,7 +4,7 @@ import 'package:spotify_project/domain/entities/song/song.dart';
 import 'package:spotify_project/presentation/auth/pages/signin_page.dart';
 import 'package:spotify_project/presentation/auth/pages/signup.dart';
 import 'package:spotify_project/presentation/auth/pages/signup_or_sigin.dart';
-import 'package:spotify_project/presentation/bottom_navigation_bar/presentation/bottom_navigation_bar.dart';
+import 'package:spotify_project/presentation/bottom_navigation_bar/pages/bottom_navigation_bar.dart';
 import 'package:spotify_project/presentation/choose_mode/pages/choose_mode.dart';
 import 'package:spotify_project/presentation/intro/pages/get_started.dart';
 import 'package:spotify_project/presentation/playlist_details/pages/playlist_details.dart';

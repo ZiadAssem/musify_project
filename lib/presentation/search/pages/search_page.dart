@@ -33,8 +33,15 @@ class SearchPage extends StatelessWidget {
               return TextField(
                 controller: _searchController,
                 decoration: const InputDecoration(
+                  isCollapsed: true,
                   hintText: 'Search',
                   border: InputBorder.none,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none, // Removes enabled border
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none, // Removes focused border
+                  ),
                 ),
                 onChanged: (query) {
                   context.read<SearchCubit>().searchSongs(query);
@@ -65,9 +72,9 @@ class SearchPage extends StatelessWidget {
         ),
         body: BlocBuilder<SearchCubit, SearchState>(
           builder: (context, state) {
-            if (state is SearchInitial) {
+            if (state is SearchInitial || _searchController.text.isEmpty) {
               return const Center(
-                child: Text('Search for songs'),
+                child: Text('Search for songs', style: TextStyle(fontSize: 20),),
               );
             } else if (state is SearchLoading) {
               return const Center(
@@ -77,7 +84,7 @@ class SearchPage extends StatelessWidget {
               return _songs(state.songs);
             } else if (state is SearchNoResults) {
               return Center(
-                child: Text('No results found'),
+                child: Text('No results found',style: TextStyle(fontSize: 20),),
               );
             } else if (state is SearchFailure) {
               return Center(

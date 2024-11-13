@@ -16,22 +16,18 @@ class BottomNavigationBarWidget extends StatelessWidget {
       create: (context) => BottomNavigationCubit(),
       child: BlocBuilder<BottomNavigationCubit, BottomNavigationState>(
         builder: (context, state) {
-          Widget page;
-
-          switch (state) {
-            case BottomNavigationState.home:
-              page = HomePage(); // Replace with your HomePage widget
-              break;
-            case BottomNavigationState.search:
-              page = SearchPage(); // Replace with your SearchPage widget
-              break;
-            case BottomNavigationState.profile:
-              page = ProfilePage(); // Replace with your ProfilePage widget
-              break;
-          }
+          // List of pages for each tab
+          final pages = [
+            HomePage(),
+            SearchPage(),
+            const ProfilePage(),
+          ];
 
           return Scaffold(
-            body: page,
+            body: IndexedStack(
+              index: BottomNavigationState.values.indexOf(state),
+              children: pages,
+            ),
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: BottomNavigationState.values.indexOf(state),
               onTap: (index) {

@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_project/core/configs/theme/app_colors.dart';
+import 'package:spotify_project/domain/repository/auth/auth.dart';
+import 'package:spotify_project/domain/usecases/auth/signout.dart';
 import '../../../common/helpers/is_dark_mode.dart';
 import '../../../common/widgets/appbar/app_bar.dart';
 import '../../../common/widgets/favorite_button.dart/favorite_button.dart';
+import '../../../service_locater.dart';
 import '../bloc/favorite_songs_cubit.dart';
 import '../bloc/favorite_songs_state.dart';
 import '../bloc/profile_info_cubit.dart';
@@ -15,50 +18,71 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
-    return WillPopScope(
-      onWillPop: () async {
-        SystemChrome.setPreferredOrientations([
-          DeviceOrientation.portraitUp,
-          DeviceOrientation.portraitDown,
-        ]);
-        Navigator.pushReplacementNamed(context, '/root');
-        return false;
-      },
-      child: Scaffold(
-        appBar: const BasicAppBar(
-          backgroundColor: Color(0xff2C2B2B),
-          title: Text('Profile'),
-        ),
-        body: MediaQuery.of(context).orientation == Orientation.portrait
-            ? Column(
-                children: [
-                  _profileInfo(context),
-                  const SizedBox(height: 25),
-                  SizedBox(
-                    height: 75,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: _buttonList(context),
+    return Scaffold(
+      appBar: BasicAppBar(
+        actions: [
+          // This function needs to be separated from ui
+          IconButton(
+            onPressed: () async {
+              // Show the loading dialog
+              showDialog(
+                context: context,
+                barrierDismissible:
+                    false, // Prevent closing the dialog by tapping outside
+                builder: (context) => const AlertDialog(
+                  content: Row(
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(width: 20),
+                      Text('Signing out...'),
+                    ],
                   ),
-                  const SizedBox(height: 25),
-                  _favoriteSongs(),
-                ],
-              )
-            : Row(
-                children: [
-                  Expanded(
-                    child: _profileInfo(context),
-                  ),
-                  Expanded(
-                    child: _favoriteSongs(),
-                  ),
-                ],
-              ),
+                ),
+              );
+
+              // Perform sign-out
+              final result = await sl<SignoutUseCase>().call();
+
+              // Close the loading dialog
+              Navigator.of(context).pop();
+
+              // Handle the result of sign-out
+              result.fold(
+                (failure) {
+                  // Show an error message
+                  showDialog(
+                    context: context,
+                    builder: (context) => const AlertDialog(
+                      title: Text('Error'),
+                      content: Text('Failed to sign out. Please try again.'),
+                    ),
+                  );
+                },
+                (success) {
+                  // Navigate to sign-in page
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/signin', (route) => false);
+                },
+              );
+            },
+            icon: const Icon(Icons.logout),
+          )
+        ],
+        backgroundColor: Color(0xff2C2B2B),
+        title: Text('Profile'),
+      ),
+      body: Column(
+        children: [
+          _profileInfo(context),
+          const SizedBox(height: 25),
+          SizedBox(
+            height: 75,
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: _buttonList(context),
+          ),
+          const SizedBox(height: 25),
+          _favoriteSongs(),
+        ],
       ),
     );
   }
@@ -67,9 +91,7 @@ class ProfilePage extends StatelessWidget {
     return BlocProvider(
       create: (context) => ProfileInfoCubit()..getUser(),
       child: Container(
-        height: MediaQuery.of(context).orientation == Orientation.portrait
-            ? MediaQuery.of(context).size.height * 0.15
-            : MediaQuery.of(context).size.height,
+        height: MediaQuery.of(context).size.height * 0.15,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           color: context.isDarkMode ? const Color(0xff2C2B2B) : Colors.white,
@@ -114,9 +136,7 @@ class ProfilePage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 20,
-                  )
+                  const SizedBox(height: 20),
                 ],
               );
             } else if (state is ProfileInfoError) {
@@ -131,7 +151,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buttonList(context) {
+  Widget _buttonList(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -165,9 +185,7 @@ class ProfilePage extends StatelessWidget {
                   icon,
                   size: 30,
                 ),
-              )
-            else
-              const SizedBox(),
+              ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 8.0),
               child: Text(
@@ -193,39 +211,35 @@ class ProfilePage extends StatelessWidget {
         children: [
           const Padding(
             padding: EdgeInsets.fromLTRB(16.0, 0, 8, 8),
-            child: Text(
-              'FAVORITE SONGS',
-            ),
+            child: Text('FAVORITE SONGS'),
           ),
           BlocBuilder<FavoriteSongsCubit, FavoriteSongsState>(
-              builder: (context, state) {
-            if (state is FavoriteSongsLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (state is FavoriteSongsLoaded) {
-              return state.songs.isEmpty
-                  ? const Text('You Have No Favorite Songs')
-                  : SizedBox(
-                      // check if portrait or landscape
-                      height: MediaQuery.of(context).orientation ==
-                              Orientation.portrait
-                          ? MediaQuery.of(context).size.height * 0.5
-                          : MediaQuery.of(context).size.height - 120,
-                      child: ListView.separated(
-                          physics: BouncingScrollPhysics(),
+            builder: (context, state) {
+              if (state is FavoriteSongsLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state is FavoriteSongsLoaded) {
+                return state.songs.isEmpty
+                    ? const Text('You Have No Favorite Songs')
+                    : SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.5 - 120,
+                        child: ListView.separated(
+                          physics: const BouncingScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: state.songs.length,
                           separatorBuilder: (context, index) => const Divider(),
                           itemBuilder: (context, index) {
                             return _songTile(context, state, index);
-                          }),
-                    );
-            } else if (state is FavoriteSongsFailure) {
-              return Text(state.message);
-            }
-            return const Text('Error');
-          })
+                          },
+                        ),
+                      );
+              } else if (state is FavoriteSongsFailure) {
+                return Text(state.message);
+              }
+              return const Text('Error');
+            },
+          ),
         ],
       ),
     );
@@ -245,15 +259,13 @@ class ProfilePage extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   image: DecorationImage(
-                      image: NetworkImage(state.songs[index].coverURL)),
+                    image: NetworkImage(state.songs[index].coverURL),
+                  ),
                 ),
               ),
               const SizedBox(width: 10),
               SizedBox(
-                width:
-                    MediaQuery.of(context).orientation == Orientation.portrait
-                        ? MediaQuery.of(context).size.width * 0.3
-                        : MediaQuery.of(context).size.width * 0.2,
+                width: MediaQuery.of(context).size.width * 0.3,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -278,17 +290,12 @@ class ProfilePage extends StatelessWidget {
             ],
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(state.songs[index].duration.toString().replaceAll('.', ':')),
               FavoriteButton(
                 key: UniqueKey(),
                 song: state.songs[index],
                 function: () {
-                  // context
-                  // .read<PlaylistCubit>()
-                  // .updateSongFavoriteStatus(
-                  //     state.songs[index]);
                   context.read<FavoriteSongsCubit>().removeFavoriteSong(index);
                 },
               ),
