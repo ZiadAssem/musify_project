@@ -72,6 +72,7 @@ Widget _topRow(BuildContext context) {
 
 Widget _songs(List<SongEntity> songs) {
   return ListView.separated(
+    
       shrinkWrap: true,
       physics: const BouncingScrollPhysics(),
       itemBuilder: ((context, index) {
@@ -118,7 +119,7 @@ Widget _songs(List<SongEntity> songs) {
           ),
         );
       }),
-      separatorBuilder: (context, index) => const Divider(),
+      separatorBuilder: (context, index) => const Divider(color: AppColors.darkGrey, thickness: 0.5,),
       itemCount: songs.length);
 }
 

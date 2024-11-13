@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/configs/theme/app_colors.dart';
 import '../../home/pages/home.dart';
 import '../../profile/pages/profile.dart';
 import '../../search/pages/search_page.dart';
@@ -57,6 +58,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
                   label: 'Profile',
                 ),
               ],
+              selectedItemColor: AppColors.primary, // Set the active icon color
             ),
           );
         },

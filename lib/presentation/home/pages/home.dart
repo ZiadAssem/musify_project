@@ -31,7 +31,6 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BasicAppBar(
-       
         hideBackButton: true,
         title: SvgPicture.asset(
           AppVectors.logo,
@@ -52,12 +51,12 @@ class _HomePageState extends State<HomePage>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                     SizedBox(height: 260, child: NewSongs()),
+                    SizedBox(height: 260, child: NewSongs()),
                     SizedBox(
                         height: MediaQuery.of(context).size.height -
                             kToolbarHeight -
                             290,
-                        child:  AllSongs()),
+                        child: AllSongs()),
                   ],
                 ),
               ),
@@ -98,6 +97,7 @@ class _HomePageState extends State<HomePage>
         top: 16.0,
       ),
       child: TabBar(
+        dividerColor: AppColors.darkGrey,
           padding: EdgeInsets.all(8),
           indicatorSize: TabBarIndicatorSize.tab,
           tabAlignment: TabAlignment.center,

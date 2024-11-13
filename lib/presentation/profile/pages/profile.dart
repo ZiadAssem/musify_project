@@ -112,6 +112,7 @@ class ProfilePage extends StatelessWidget {
                 children: [
                   const SizedBox(height: 20),
                   CircleAvatar(
+                    backgroundColor: AppColors.darkGrey,
                     maxRadius: 50,
                     backgroundImage: NetworkImage(state.user.profileImageURL!),
                   ),
